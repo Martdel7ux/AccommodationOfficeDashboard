@@ -1,6 +1,7 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Home, PlusCircle, LogOut, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Home, PlusCircle, LogOut, ChevronRight, Download } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useEffect, useState } from 'react';
 
 const NAV = [
   { to: '/dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
@@ -12,6 +13,24 @@ export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
+
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [installed, setInstalled]         = useState(false);
+
+  useEffect(() => {
+    const handler = (e) => { e.preventDefault(); setInstallPrompt(e); };
+    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', () => { setInstalled(true); setInstallPrompt(null); });
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    if (outcome === 'accepted') setInstalled(true);
+    setInstallPrompt(null);
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -72,6 +91,22 @@ export default function Sidebar() {
           })}
         </ul>
       </nav>
+
+      {/* Install app button */}
+      {installPrompt && !installed && (
+        <div className="px-4 pb-3">
+          <button
+            onClick={handleInstall}
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-primary-50 hover:bg-primary-100 border border-primary-200 transition-colors text-left"
+          >
+            <Download size={15} className="text-primary-600 flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-primary-700 leading-tight">Install App</p>
+              <p className="text-[10px] text-primary-500 leading-tight mt-0.5">Open without a browser</p>
+            </div>
+          </button>
+        </div>
+      )}
 
       {/* User profile + logout */}
       <div className="px-4 py-4 border-t border-slate-100">
