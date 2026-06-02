@@ -166,7 +166,59 @@ module.exports = async (req, res) => {
       doc.y = cardY + CARD_H + 4;
     });
 
-    // ── Footer ────────────────────────────────────────────────────────────────
+    // ── Disclaimer block ──────────────────────────────────────────────────────
+    const DISCLAIMER =
+      'Please note that the University of Nicosia cannot guarantee the quality, the distance you ' +
+      'may prefer, or any aspect of private accommodation, nor can it guarantee the availability of ' +
+      'the listed options. These housing options are independent of the University, and you should ' +
+      'contact and rent directly from the respective owners. Please note that owners usually require ' +
+      'a deposit equal to one or two months’ rent in order to secure the apartment/studio. Any ' +
+      'amount outside this range may raise suspicion. If you are unsure, we recommend visiting the ' +
+      'apartment to confirm its condition before proceeding with any rent payment.\n\n' +
+      'If you need any further assistance or have specific questions, please do not hesitate to contact us.';
+
+    const DISC_MARGIN   = 40;
+    const DISC_WIDTH    = doc.page.width - DISC_MARGIN * 2;
+    const DISC_PADDING  = 14;
+    const LABEL_H       = 16;
+
+    // Measure how tall the text block will be
+    const textHeight = doc.heightOfString(DISCLAIMER, {
+      width:    DISC_WIDTH - DISC_PADDING * 2 - 6,
+      fontSize: 8.5,
+    });
+    const DISC_H = LABEL_H + textHeight + DISC_PADDING * 2 + 8;
+
+    // New page if not enough room (leave space for footer)
+    if (doc.y + DISC_H > doc.page.height - 60) doc.addPage();
+
+    const dy = doc.y + 10;
+
+    // Background + red left accent bar
+    doc.rect(DISC_MARGIN, dy, DISC_WIDTH, DISC_H).fill('#FFF1F3').stroke('#FECDD3');
+    doc.rect(DISC_MARGIN, dy, 4, DISC_H).fill(RED);
+
+    // "DISCLAIMER" label
+    doc.fillColor(RED).fontSize(7.5).font('Helvetica-Bold')
+       .text('DISCLAIMER', DISC_MARGIN + DISC_PADDING + 6, dy + DISC_PADDING, {
+         width: DISC_WIDTH - DISC_PADDING * 2 - 6,
+       });
+
+    // Divider under label
+    doc.rect(DISC_MARGIN + DISC_PADDING + 6, dy + DISC_PADDING + LABEL_H - 2,
+             DISC_WIDTH - DISC_PADDING * 2 - 6, 0.5).fill('#FECDD3');
+
+    // Disclaimer body — red bold
+    doc.fillColor(RED).fontSize(8.5).font('Helvetica-Bold')
+       .text(DISCLAIMER, DISC_MARGIN + DISC_PADDING + 6, dy + DISC_PADDING + LABEL_H + 6, {
+         width:     DISC_WIDTH - DISC_PADDING * 2 - 6,
+         lineGap:   2,
+         align:     'justify',
+       });
+
+    doc.y = dy + DISC_H + 8;
+
+    // ── Footer on every page ──────────────────────────────────────────────────
     const range = doc.bufferedPageRange();
     for (let i = 0; i < range.count; i++) {
       doc.switchToPage(range.start + i);
