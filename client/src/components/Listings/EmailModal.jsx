@@ -2,10 +2,16 @@ import { useState } from 'react';
 import { Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import Modal from '../common/Modal.jsx';
 import { sendEmail } from '../../utils/api.js';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 export default function EmailModal({ isOpen, onClose, filters, count }) {
+  const { user } = useAuth();
+
+  const senderName  = user?.user_metadata?.full_name || 'Accommodation Office';
+  const senderEmail = user?.email || '';
+
   const [form, setForm]     = useState({ to: '', subject: 'UNIC Accommodation Listings', message: '' });
-  const [status, setStatus] = useState('idle'); // idle | sending | success | error
+  const [status, setStatus] = useState('idle');
   const [error, setError]   = useState('');
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -15,7 +21,12 @@ export default function EmailModal({ isOpen, onClose, filters, count }) {
     setStatus('sending');
     setError('');
     try {
-      await sendEmail({ ...form, filters });
+      await sendEmail({
+        ...form,
+        filters,
+        sender_name:  senderName,
+        sender_email: senderEmail,
+      });
       setStatus('success');
       setTimeout(() => {
         setStatus('idle');
@@ -40,6 +51,20 @@ export default function EmailModal({ isOpen, onClose, filters, count }) {
         </div>
       ) : (
         <div className="space-y-4">
+
+          {/* Sender info banner */}
+          <div className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3">
+            <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center flex-shrink-0">
+              <span className="text-xs font-bold text-white">
+                {senderName.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase() || senderEmail.slice(0, 2).toUpperCase()}
+              </span>
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-slate-700">Sending as</p>
+              <p className="text-xs text-slate-500 truncate">{senderName} · {senderEmail}</p>
+            </div>
+          </div>
+
           <div className="bg-primary-50 rounded-lg px-3 py-2 text-xs text-primary-700">
             Will send <strong>{count}</strong> listing{count !== 1 ? 's' : ''} matching current filters
           </div>
@@ -90,11 +115,7 @@ export default function EmailModal({ isOpen, onClose, filters, count }) {
               disabled={!form.to.trim() || status === 'sending'}
               className="btn-primary flex-1"
             >
-              {status === 'sending' ? (
-                <Loader2 size={14} className="animate-spin" />
-              ) : (
-                <Send size={14} />
-              )}
+              {status === 'sending' ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
               {status === 'sending' ? 'Sending…' : 'Send Email'}
             </button>
           </div>

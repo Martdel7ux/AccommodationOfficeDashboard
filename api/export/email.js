@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).end();
 
   try {
-    const { to, subject, message, filters } = req.body;
+    const { to, subject, message, filters, sender_name, sender_email } = req.body;
     if (!to) return res.status(400).json({ error: 'Recipient email is required' });
 
     const { data: all } = await supabase.from('accommodations').select('*');
@@ -47,8 +47,12 @@ module.exports = async (req, res) => {
         <td style="padding:10px 8px;color:#64748B;">${l.first_name} ${l.last_name}</td>
       </tr>`).join('');
 
+    const displayName = sender_name || 'UNIC Accommodation Office';
+    const replyTo     = sender_email || process.env.SMTP_USER;
+
     await transporter.sendMail({
-      from:    process.env.EMAIL_FROM || 'UNIC Accommodation Office',
+      from:    process.env.EMAIL_FROM || `"${displayName}" <${process.env.SMTP_USER}>`,
+      replyTo: `"${displayName}" <${replyTo}>`,
       to,
       subject: subject || 'UNIC Accommodation Listings',
       html: `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
