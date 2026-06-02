@@ -111,18 +111,22 @@ export default function Sidebar() {
       {/* User profile + logout */}
       <div className="px-4 py-4 border-t border-slate-100">
         <div className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-slate-50 transition-colors">
-          {/* Avatar */}
-          <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center flex-shrink-0">
-            <span className="text-xs font-bold text-white">{initials}</span>
-          </div>
-
-          {/* Name + email */}
-          <div className="flex-1 min-w-0">
-            {fullName && (
-              <p className="text-xs font-semibold text-slate-800 truncate">{fullName}</p>
-            )}
-            <p className="text-[11px] text-slate-400 truncate">{email}</p>
-          </div>
+          {/* Avatar — click goes to settings */}
+          <button
+            onClick={() => navigate('/settings')}
+            className="flex items-center gap-3 flex-1 min-w-0 text-left"
+            title="Account settings"
+          >
+            <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center flex-shrink-0">
+              <span className="text-xs font-bold text-white">{initials}</span>
+            </div>
+            <div className="min-w-0">
+              {fullName && (
+                <p className="text-xs font-semibold text-slate-800 truncate">{fullName}</p>
+              )}
+              <p className="text-[11px] text-slate-400 truncate">{email}</p>
+            </div>
+          </button>
 
           {/* Logout */}
           <button
