@@ -24,6 +24,12 @@ module.exports = async (req, res) => {
     const { to, subject, message, filters, sender_name, sender_email } = req.body;
     if (!to) return res.status(400).json({ error: 'Recipient email is required' });
 
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      return res.status(500).json({
+        error: 'Email is not configured. Please add SMTP_USER and SMTP_PASS in your Vercel environment variables.',
+      });
+    }
+
     const { data: all } = await supabase.from('accommodations').select('*');
     const listings = getFiltered(all || [], filters || {});
 
