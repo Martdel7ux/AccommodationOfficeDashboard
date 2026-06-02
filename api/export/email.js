@@ -34,10 +34,11 @@ module.exports = async (req, res) => {
     const listings = getFiltered(all || [], filters || {});
 
     const transporter = nodemailer.createTransport({
-      host:   process.env.SMTP_HOST || 'smtp.gmail.com',
+      host:   process.env.SMTP_HOST || 'smtp.office365.com',
       port:   Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === 'true',
+      secure: false, // Office 365 uses STARTTLS on port 587, not SSL
       auth:   { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      tls:    { ciphers: 'SSLv3', rejectUnauthorized: false }, // required for Office 365
     });
 
     const rows = listings.map((l) => `
