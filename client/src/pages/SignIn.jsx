@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Loader2, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient.js';
 
 export default function SignIn() {
@@ -26,24 +26,74 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-slate-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md animate-slide-up">
+    <div className="min-h-screen flex">
 
-        {/* Logo card */}
-        <div className="flex justify-center mb-8">
+      {/* ── Left panel: campus photo ─────────────────────────────────────── */}
+      <div className="hidden lg:flex lg:w-[58%] relative overflow-hidden">
+        {/* Photo */}
+        <img
+          src="/unic-campus.jpg"
+          alt="University of Nicosia campus"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+
+        {/* Gradient overlay — dark at bottom, semi-transparent red tint overall */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-slate-900/50 to-primary-900/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent" />
+
+        {/* Content on photo */}
+        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+          {/* Top logo */}
           <img
-            src="/unic-logo.png"
-            alt="UNIC Accommodation Office"
-            className="h-14 w-auto object-contain"
+            src="/unic-logo-white.png"
+            alt="UNIC"
+            className="h-10 w-auto object-contain object-left"
           />
-        </div>
 
-        {/* Form card */}
-        <div className="bg-white rounded-2xl shadow-modal p-8">
-          <div className="mb-7">
-            <h1 className="text-2xl font-bold text-slate-900">Welcome back</h1>
-            <p className="text-slate-500 text-sm mt-1">
-              Sign in to the Accommodation Office portal
+          {/* Bottom text */}
+          <div>
+            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-white/90 text-xs font-medium tracking-wide">Accommodation Office Portal</span>
+            </div>
+            <h1 className="text-4xl font-bold text-white leading-tight mb-3">
+              Find the perfect<br />home away from home.
+            </h1>
+            <p className="text-white/60 text-base leading-relaxed max-w-md">
+              Manage off-campus student accommodation listings for the University of Nicosia community.
+            </p>
+
+            {/* Stats row */}
+            <div className="flex gap-8 mt-8">
+              {[
+                { label: 'Active Listings', value: '120+' },
+                { label: 'Students Helped', value: '2,400+' },
+                { label: 'Partner Landlords', value: '80+' },
+              ].map(({ label, value }) => (
+                <div key={label}>
+                  <p className="text-2xl font-bold text-white">{value}</p>
+                  <p className="text-white/50 text-xs mt-0.5">{label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Right panel: form ─────────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 bg-white">
+        <div className="w-full max-w-[400px] animate-slide-up">
+
+          {/* Mobile logo */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <img src="/unic-logo.png" alt="UNIC" className="h-12 w-auto object-contain" />
+          </div>
+
+          {/* Heading */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-slate-900">Welcome back</h2>
+            <p className="text-slate-500 text-sm mt-1.5">
+              Sign in to your accommodation office account
             </p>
           </div>
 
@@ -52,7 +102,7 @@ export default function SignIn() {
             <div>
               <label className="form-label">Email address</label>
               <div className="relative">
-                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                 <input
                   type="email"
                   className="form-input pl-9"
@@ -69,7 +119,7 @@ export default function SignIn() {
             <div>
               <label className="form-label">Password</label>
               <div className="relative">
-                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                 <input
                   type={showPass ? 'text' : 'password'}
                   className="form-input pl-9 pr-10"
@@ -81,7 +131,7 @@ export default function SignIn() {
                 <button
                   type="button"
                   onClick={() => setShowPass((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                 >
                   {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
@@ -90,7 +140,7 @@ export default function SignIn() {
 
             {/* Error */}
             {error && (
-              <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 rounded-xl px-3.5 py-3">
+              <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-3.5 py-3">
                 <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />
                 {error}
               </div>
@@ -100,24 +150,35 @@ export default function SignIn() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full justify-center py-3 text-base mt-2"
+              className="btn-primary w-full justify-center py-3 text-[15px] mt-1 rounded-xl"
             >
-              {loading ? <Loader2 size={18} className="animate-spin" /> : null}
+              {loading
+                ? <Loader2 size={18} className="animate-spin" />
+                : <ArrowRight size={17} />}
               {loading ? 'Signing in…' : 'Sign In'}
             </button>
           </form>
 
-          <p className="text-center text-sm text-slate-500 mt-6">
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-px bg-slate-100" />
+            <span className="text-xs text-slate-400">or</span>
+            <div className="flex-1 h-px bg-slate-100" />
+          </div>
+
+          <p className="text-center text-sm text-slate-500">
             Don't have an account?{' '}
-            <Link to="/signup" className="font-semibold text-primary-600 hover:text-primary-700 transition-colors">
+            <Link
+              to="/signup"
+              className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+            >
               Create one
             </Link>
           </p>
-        </div>
 
-        <p className="text-center text-xs text-slate-400 mt-6">
-          University of Nicosia · Accommodation Office
-        </p>
+          <p className="text-center text-xs text-slate-300 mt-10">
+            © {new Date().getFullYear()} University of Nicosia · Accommodation Office
+          </p>
+        </div>
       </div>
     </div>
   );

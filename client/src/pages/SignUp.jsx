@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Loader2, AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Loader2, AlertCircle, CheckCircle2, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient.js';
 
 export default function SignUp() {
@@ -16,177 +16,219 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    if (form.password !== form.confirm) {
-      return setError('Passwords do not match.');
-    }
-    if (form.password.length < 6) {
-      return setError('Password must be at least 6 characters.');
-    }
+    if (form.password !== form.confirm) return setError('Passwords do not match.');
+    if (form.password.length < 6)       return setError('Password must be at least 6 characters.');
 
     setLoading(true);
     const { error: err } = await supabase.auth.signUp({
       email:    form.email.trim(),
       password: form.password,
-      options:  {
-        data: { full_name: form.fullName.trim() },
-      },
+      options:  { data: { full_name: form.fullName.trim() } },
     });
     setLoading(false);
-
     if (err) return setError(err.message);
     setSuccess(true);
   };
 
-  if (success) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-slate-100 flex items-center justify-center px-4">
-        <div className="w-full max-w-md animate-slide-up">
-          <div className="flex justify-center mb-8">
-            <img src="/unic-logo.png" alt="UNIC" className="h-14 w-auto object-contain" />
-          </div>
-          <div className="bg-white rounded-2xl shadow-modal p-8 text-center">
-            <div className="w-14 h-14 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 size={28} className="text-emerald-500" />
+  return (
+    <div className="min-h-screen flex">
+
+      {/* ── Left panel: campus photo ─────────────────────────────────────── */}
+      <div className="hidden lg:flex lg:w-[58%] relative overflow-hidden">
+        <img
+          src="/unic-campus.jpg"
+          alt="University of Nicosia campus"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-slate-900/50 to-primary-900/60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent" />
+
+        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+          <img
+            src="/unic-logo-white.png"
+            alt="UNIC"
+            className="h-10 w-auto object-contain object-left"
+          />
+          <div>
+            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-white/90 text-xs font-medium tracking-wide">Accommodation Office Portal</span>
             </div>
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Account created!</h2>
-            <p className="text-slate-500 text-sm mb-6">
-              Check your email inbox and click the confirmation link, then come back to sign in.
+            <h1 className="text-4xl font-bold text-white leading-tight mb-3">
+              Find the perfect<br />home away from home.
+            </h1>
+            <p className="text-white/60 text-base leading-relaxed max-w-md">
+              Manage off-campus student accommodation listings for the University of Nicosia community.
             </p>
-            <Link to="/signin" className="btn-primary w-full justify-center py-3 text-base">
-              Go to Sign In
-            </Link>
+            <div className="flex gap-8 mt-8">
+              {[
+                { label: 'Active Listings',  value: '120+' },
+                { label: 'Students Helped',  value: '2,400+' },
+                { label: 'Partner Landlords', value: '80+' },
+              ].map(({ label, value }) => (
+                <div key={label}>
+                  <p className="text-2xl font-bold text-white">{value}</p>
+                  <p className="text-white/50 text-xs mt-0.5">{label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-primary-50 to-slate-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md animate-slide-up">
+      {/* ── Right panel: form ─────────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 bg-white">
+        <div className="w-full max-w-[400px] animate-slide-up">
 
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <img
-            src="/unic-logo.png"
-            alt="UNIC Accommodation Office"
-            className="h-14 w-auto object-contain"
-          />
-        </div>
-
-        {/* Form card */}
-        <div className="bg-white rounded-2xl shadow-modal p-8">
-          <div className="mb-7">
-            <h1 className="text-2xl font-bold text-slate-900">Create your account</h1>
-            <p className="text-slate-500 text-sm mt-1">
-              Join the Accommodation Office portal
-            </p>
+          {/* Mobile logo */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <img src="/unic-logo.png" alt="UNIC" className="h-12 w-auto object-contain" />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Full name */}
-            <div>
-              <label className="form-label">Full Name</label>
-              <div className="relative">
-                <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  className="form-input pl-9"
-                  placeholder="Andreas Papadopoulos"
-                  value={form.fullName}
-                  onChange={(e) => set('fullName', e.target.value)}
-                  required
-                  autoFocus
-                />
+          {success ? (
+            /* ── Success state ── */
+            <div className="text-center">
+              <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-5">
+                <CheckCircle2 size={32} className="text-emerald-500" />
               </div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">You're all set!</h2>
+              <p className="text-slate-500 text-sm mb-8 leading-relaxed">
+                Check your email inbox and click the confirmation link to activate your account, then come back to sign in.
+              </p>
+              <Link
+                to="/signin"
+                className="btn-primary w-full justify-center py-3 text-[15px] rounded-xl"
+              >
+                <ArrowRight size={17} />
+                Go to Sign In
+              </Link>
             </div>
-
-            {/* Email */}
-            <div>
-              <label className="form-label">Email address</label>
-              <div className="relative">
-                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="email"
-                  className="form-input pl-9"
-                  placeholder="you@unic.ac.cy"
-                  value={form.email}
-                  onChange={(e) => set('email', e.target.value)}
-                  required
-                />
+          ) : (
+            <>
+              {/* ── Heading ── */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-slate-900">Create your account</h2>
+                <p className="text-slate-500 text-sm mt-1.5">
+                  Join the Accommodation Office portal
+                </p>
               </div>
-            </div>
 
-            {/* Password */}
-            <div>
-              <label className="form-label">Password</label>
-              <div className="relative">
-                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  className="form-input pl-9 pr-10"
-                  placeholder="Min. 6 characters"
-                  value={form.password}
-                  onChange={(e) => set('password', e.target.value)}
-                  required
-                />
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Full name */}
+                <div>
+                  <label className="form-label">Full Name</label>
+                  <div className="relative">
+                    <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                    <input
+                      type="text"
+                      className="form-input pl-9"
+                      placeholder="Andreas Papadopoulos"
+                      value={form.fullName}
+                      onChange={(e) => set('fullName', e.target.value)}
+                      required
+                      autoFocus
+                    />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="form-label">Work Email</label>
+                  <div className="relative">
+                    <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                    <input
+                      type="email"
+                      className="form-input pl-9"
+                      placeholder="you@unic.ac.cy"
+                      value={form.email}
+                      onChange={(e) => set('email', e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="form-label">Password</label>
+                  <div className="relative">
+                    <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                    <input
+                      type={showPass ? 'text' : 'password'}
+                      className="form-input pl-9 pr-10"
+                      placeholder="Min. 6 characters"
+                      value={form.password}
+                      onChange={(e) => set('password', e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPass((v) => !v)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                    >
+                      {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Confirm password */}
+                <div>
+                  <label className="form-label">Confirm Password</label>
+                  <div className="relative">
+                    <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                    <input
+                      type={showPass ? 'text' : 'password'}
+                      className="form-input pl-9"
+                      placeholder="Repeat your password"
+                      value={form.confirm}
+                      onChange={(e) => set('confirm', e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Error */}
+                {error && (
+                  <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-3.5 py-3">
+                    <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />
+                    {error}
+                  </div>
+                )}
+
+                {/* Submit */}
                 <button
-                  type="button"
-                  onClick={() => setShowPass((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  type="submit"
+                  disabled={loading}
+                  className="btn-primary w-full justify-center py-3 text-[15px] mt-1 rounded-xl"
                 >
-                  {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                  {loading
+                    ? <Loader2 size={18} className="animate-spin" />
+                    : <ArrowRight size={17} />}
+                  {loading ? 'Creating account…' : 'Create Account'}
                 </button>
+              </form>
+
+              <div className="flex items-center gap-3 my-6">
+                <div className="flex-1 h-px bg-slate-100" />
+                <span className="text-xs text-slate-400">or</span>
+                <div className="flex-1 h-px bg-slate-100" />
               </div>
-            </div>
 
-            {/* Confirm password */}
-            <div>
-              <label className="form-label">Confirm Password</label>
-              <div className="relative">
-                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  className="form-input pl-9"
-                  placeholder="Repeat your password"
-                  value={form.confirm}
-                  onChange={(e) => set('confirm', e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+              <p className="text-center text-sm text-slate-500">
+                Already have an account?{' '}
+                <Link
+                  to="/signin"
+                  className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+                >
+                  Sign in
+                </Link>
+              </p>
+            </>
+          )}
 
-            {/* Error */}
-            {error && (
-              <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 rounded-xl px-3.5 py-3">
-                <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />
-                {error}
-              </div>
-            )}
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full justify-center py-3 text-base mt-2"
-            >
-              {loading ? <Loader2 size={18} className="animate-spin" /> : null}
-              {loading ? 'Creating account…' : 'Create Account'}
-            </button>
-          </form>
-
-          <p className="text-center text-sm text-slate-500 mt-6">
-            Already have an account?{' '}
-            <Link to="/signin" className="font-semibold text-primary-600 hover:text-primary-700 transition-colors">
-              Sign in
-            </Link>
+          <p className="text-center text-xs text-slate-300 mt-10">
+            © {new Date().getFullYear()} University of Nicosia · Accommodation Office
           </p>
         </div>
-
-        <p className="text-center text-xs text-slate-400 mt-6">
-          University of Nicosia · Accommodation Office
-        </p>
       </div>
     </div>
   );
