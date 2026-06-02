@@ -7,27 +7,28 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['unic-logo.png', 'unic-logo-white.png', 'unic-campus.jpg'],
+      includeAssets: ['unic-logo.png', 'unic-logo-white.png', 'unic-campus.jpg', 'pwa-192x192.png', 'pwa-512x512.png'],
       manifest: {
         name: 'UNIC Accommodation Office',
         short_name: 'UNIC Accom',
         description: 'The Off Campus Accommodation Database of the University of Nicosia',
         theme_color: '#C41230',
-        background_color: '#ffffff',
+        background_color: '#C41230',
         display: 'standalone',
         start_url: '/dashboard',
         scope: '/',
         icons: [
           {
-            src: '/unic-logo.png',
+            src: '/pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
+            purpose: 'any',
           },
           {
-            src: '/unic-logo.png',
+            src: '/pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any',
+            purpose: 'any maskable',
           },
         ],
       },
