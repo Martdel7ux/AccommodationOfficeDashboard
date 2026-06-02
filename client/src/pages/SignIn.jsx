@@ -43,40 +43,14 @@ export default function SignIn() {
 
         {/* Content on photo */}
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          {/* Top logo */}
           <img
             src="/unic-logo-white.png"
             alt="UNIC"
             className="h-10 w-auto object-contain object-left"
           />
-
-          {/* Bottom text */}
-          <div>
-            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-white/90 text-xs font-medium tracking-wide">Accommodation Office Portal</span>
-            </div>
-            <h1 className="text-4xl font-bold text-white leading-tight mb-3">
-              Find the perfect<br />home away from home.
-            </h1>
-            <p className="text-white/60 text-base leading-relaxed max-w-md">
-              Manage off-campus student accommodation listings for the University of Nicosia community.
-            </p>
-
-            {/* Stats row */}
-            <div className="flex gap-8 mt-8">
-              {[
-                { label: 'Active Listings', value: '120+' },
-                { label: 'Students Helped', value: '2,400+' },
-                { label: 'Partner Landlords', value: '80+' },
-              ].map(({ label, value }) => (
-                <div key={label}>
-                  <p className="text-2xl font-bold text-white">{value}</p>
-                  <p className="text-white/50 text-xs mt-0.5">{label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <p className="text-white text-2xl font-semibold leading-snug max-w-sm">
+            The Off Campus Accommodation Database of the University of Nicosia
+          </p>
         </div>
       </div>
 
