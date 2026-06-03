@@ -50,15 +50,15 @@ export default function Sidebar() {
     <aside
       className="fixed top-0 left-0 h-screen w-64 flex flex-col z-30"
       style={{
-        background: 'rgba(255,255,255,0.75)',
-        backdropFilter: 'blur(32px)',
-        WebkitBackdropFilter: 'blur(32px)',
-        borderRight: '1px solid rgba(255,255,255,0.7)',
-        boxShadow: '4px 0 32px rgba(0,0,0,0.06)',
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.58) 0%, rgba(255,255,255,0.42) 100%)',
+        backdropFilter: 'blur(40px) saturate(200%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+        borderRight: '1px solid rgba(255,255,255,0.45)',
+        boxShadow: '8px 0 40px rgba(0,0,0,0.06), inset -1px 0 0 rgba(255,255,255,0.55)',
       }}
     >
       {/* Brand logo */}
-      <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(203,213,225,0.3)' }}>
+      <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.38)', background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.05) 100%)' }}>
         <img src="/unic-logo.png" alt="UNIC Accommodation Office" className="h-12 w-auto object-contain" />
       </div>
 
@@ -143,20 +143,37 @@ export default function Sidebar() {
       {/* Language toggle */}
       <div className="px-4 pb-3">
         <div
-          className="flex rounded-xl overflow-hidden"
-          style={{ border: '1px solid rgba(203,213,225,0.4)', background: 'rgba(248,250,252,0.6)' }}
+          className="flex overflow-hidden"
+          style={{
+            borderRadius: 99,
+            border: '1px solid rgba(255,255,255,0.50)',
+            borderTopColor: 'rgba(255,255,255,0.80)',
+            background: 'rgba(255,255,255,0.22)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.60)',
+            padding: '2px',
+            gap: '2px',
+          }}
         >
           {['en', 'el'].map((l) => (
             <button
               key={l}
               onClick={() => setLang(l)}
-              className="flex-1 py-1.5 text-xs font-semibold transition-all duration-200"
-              style={lang === l ? {
-                background: 'linear-gradient(135deg, #C41230, #E11740)',
-                color: '#fff',
-                boxShadow: '0 2px 8px rgba(196,18,48,0.25)',
-              } : {
-                color: '#94a3b8',
+              className="flex-1 py-1.5 text-xs font-semibold transition-all duration-300"
+              style={{
+                borderRadius: 99,
+                ...(lang === l ? {
+                  background: 'linear-gradient(135deg, rgba(225,23,64,0.95), rgba(196,18,48,0.92))',
+                  color: '#fff',
+                  boxShadow: '0 2px 10px rgba(196,18,48,0.30), inset 0 1px 0 rgba(255,255,255,0.25)',
+                  border: '1px solid rgba(255,255,255,0.20)',
+                  borderTopColor: 'rgba(255,255,255,0.35)',
+                } : {
+                  color: '#94a3b8',
+                  background: 'transparent',
+                  border: '1px solid transparent',
+                }),
               }}
             >
               {l.toUpperCase()}
@@ -166,7 +183,7 @@ export default function Sidebar() {
       </div>
 
       {/* User profile + logout */}
-      <div className="px-4 py-4" style={{ borderTop: '1px solid rgba(203,213,225,0.3)' }}>
+      <div className="px-4 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.38)', background: 'linear-gradient(0deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.05) 100%)' }}>
         <div className="flex items-center gap-3 px-2 py-2 rounded-xl transition-all duration-200">
           <button
             onClick={() => navigate('/settings')}

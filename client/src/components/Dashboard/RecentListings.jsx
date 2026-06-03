@@ -40,8 +40,15 @@ export default function RecentListings({ listings = [] }) {
             style={{
               borderTop: idx > 0 ? '1px solid rgba(203,213,225,0.2)' : 'none',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.5)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.45)';
+              e.currentTarget.style.backdropFilter = 'blur(8px)';
+              e.currentTarget.style.borderRadius = '12px';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.backdropFilter = 'none';
+            }}
           >
             {/* Bedroom / type indicator */}
             <div className="w-9 h-9 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 text-xs font-bold text-primary-600">

@@ -17,13 +17,14 @@ const GlassTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
     <div style={{
-      background: 'rgba(255,255,255,0.94)',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-      border: '1px solid rgba(255,255,255,0.95)',
-      borderRadius: 12,
+      background: 'linear-gradient(170deg, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.72) 100%)',
+      backdropFilter: 'blur(32px) saturate(200%)',
+      WebkitBackdropFilter: 'blur(32px) saturate(200%)',
+      border: '1px solid rgba(255,255,255,0.60)',
+      borderTopColor: 'rgba(255,255,255,0.95)',
+      borderRadius: 14,
       padding: '9px 14px',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+      boxShadow: '0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.95)',
     }}>
       {label && (
         <p style={{ fontSize: 10, color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 5 }}>
@@ -38,22 +39,30 @@ const GlassTooltip = ({ active, payload, label }) => {
   );
 };
 
-// ── Glass card wrapper ────────────────────────────────────────────────────────
+// ── Liquid Glass chart card ───────────────────────────────────────────────────
 function ChartCard({ title, accent = '#C41230', badge, children }) {
   return (
     <div style={{
-      borderRadius: 20,
-      background: 'rgba(255,255,255,0.72)',
-      backdropFilter: 'blur(24px)',
-      WebkitBackdropFilter: 'blur(24px)',
-      border: '1px solid rgba(255,255,255,0.88)',
-      boxShadow: '0 4px 24px -4px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.95)',
+      borderRadius: 22,
+      background: 'linear-gradient(170deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.35) 100%)',
+      backdropFilter: 'blur(28px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+      border: '1px solid rgba(255,255,255,0.48)',
+      borderTopColor: 'rgba(255,255,255,0.90)',
+      boxShadow: [
+        '0 8px 32px rgba(0,0,0,0.07)',
+        '0 2px 8px rgba(0,0,0,0.04)',
+        'inset 0 1px 0 rgba(255,255,255,0.92)',
+        'inset 0 -1px 0 rgba(255,255,255,0.12)',
+      ].join(', '),
       overflow: 'hidden',
+      transition: 'all 0.3s ease',
     }}>
-      {/* Header */}
+      {/* Header — glass header strip */}
       <div style={{
         padding: '17px 22px 13px',
-        borderBottom: '1px solid rgba(203,213,225,0.25)',
+        borderBottom: '1px solid rgba(255,255,255,0.38)',
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.10) 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
