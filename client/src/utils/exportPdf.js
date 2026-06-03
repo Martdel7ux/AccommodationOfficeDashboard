@@ -118,42 +118,33 @@ function tagPill(doc, x, y, text) {
 
 // ── Banner (on every page) ────────────────────────────────────────────────────
 function addBanner(doc, logoBase64, pageNum, totalPages) {
-  // Gradient: deep crimson → bright red
-  gradientRect(doc, 0, 0, PAGE_W, BANNER, C.redDark, C.redLight);
+  // Gradient: deep crimson on the left → pure white on the right
+  gradientRect(doc, 0, 0, PAGE_W, BANNER, C.redDark, C.white);
 
-  // Logo (white rounded box so it's always visible)
-  const LOGO_BOX_W = 40;
-  const LOGO_BOX_H = 16;
-  const LOGO_BOX_X = MX;
-  const LOGO_BOX_Y = (BANNER - LOGO_BOX_H) / 2;
-
-  if (logoBase64) {
-    // White backing card
-    fill(doc, C.white);
-    draw(doc, [255, 255, 255]);
-    doc.setLineWidth(0);
-    doc.roundedRect(LOGO_BOX_X, LOGO_BOX_Y, LOGO_BOX_W, LOGO_BOX_H, 2, 2, 'F');
-    try {
-      doc.addImage(
-        logoBase64, 'PNG',
-        LOGO_BOX_X + 2, LOGO_BOX_Y + 1,
-        LOGO_BOX_W - 4, LOGO_BOX_H - 2,
-        undefined, 'FAST'
-      );
-    } catch { /* skip if format unsupported */ }
-  }
-
-  // Text to the right of the logo box
-  const textX = LOGO_BOX_X + LOGO_BOX_W + 6;
+  // Text on the left (over red area) — white for contrast
+  const textX = MX;
   rgb(doc, C.white);
   bold(doc, 11.5);
   doc.text('UNIC Accommodation Office', textX, BANNER / 2 - 1);
   norm(doc, 7.5);
   doc.text('University of Nicosia Off Campus Accommodation Options', textX, BANNER / 2 + 5);
 
-  // Page number
-  bold(doc, 8);
-  doc.text(`${pageNum} / ${totalPages}`, PAGE_W - MX, BANNER / 2 + 1.5, { align: 'right' });
+  // Logo on the right (over white area) — placed directly, no backing box
+  const LOGO_W  = 52;
+  const LOGO_H  = 15;
+  const LOGO_X  = PAGE_W - MX - LOGO_W;
+  const LOGO_Y  = (BANNER - LOGO_H) / 2;
+
+  if (logoBase64) {
+    try {
+      doc.addImage(logoBase64, 'JPEG', LOGO_X, LOGO_Y, LOGO_W, LOGO_H, undefined, 'FAST');
+    } catch { /* skip if unsupported */ }
+  }
+
+  // Page number — dark text, sits just above the logo
+  rgb(doc, [100, 116, 139]);
+  bold(doc, 7.5);
+  doc.text(`${pageNum} / ${totalPages}`, PAGE_W - MX, BANNER - 2.5, { align: 'right' });
 }
 
 // ── First-page meta ───────────────────────────────────────────────────────────
