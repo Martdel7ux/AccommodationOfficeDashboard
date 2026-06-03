@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, CheckCircle2, XCircle, Euro, Plus, Building2 } from 'lucide-react';
+import { Home, CheckCircle2, XCircle, Euro, Plus } from 'lucide-react';
 import { getStats } from '../utils/api.js';
 import StatsCard from '../components/Dashboard/StatsCard.jsx';
 import { PropertyTypeChart, AvailabilityChart, BedroomsChart, AudienceChart } from '../components/Dashboard/Charts.jsx';
@@ -97,20 +97,6 @@ export default function Dashboard() {
       {/* Recent listings */}
       <RecentListings listings={stats.recentListings} />
 
-      {/* Quick summary */}
-      {stats.byType.length > 0 && (
-        <div className="card p-5">
-          <h3 className="text-sm font-semibold text-slate-700 mb-3">Property Breakdown</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {stats.byType.map((t) => (
-              <div key={t.property_type} className="bg-slate-50 rounded-xl p-4 text-center">
-                <p className="text-2xl font-bold text-slate-900 tabular-nums">{t.count}</p>
-                <p className="text-xs text-slate-500 mt-1 capitalize">{t.property_type}s</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
