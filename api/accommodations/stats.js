@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
   try {
     const { data: all, error } = await supabase
       .from('accommodations')
-      .select('id,first_name,last_name,property_type,bedrooms,price,address,availability_status,target_audience,created_at');
+      .select('id,first_name,last_name,property_type,bedrooms,price,address,availability_status,target_audience,created_at,created_by_name');
 
     if (error) return res.status(500).json({ error: error.message });
 
