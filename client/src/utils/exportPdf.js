@@ -29,7 +29,7 @@ const TEXT_W = PAGE_W - MX - TEXT_X - 3;
 
 const DISCLAIMER = `Please note that the University of Nicosia cannot guarantee the quality, the distance you may prefer, or any aspect of private accommodation, nor can it guarantee the availability of the listed options. These housing options are independent of the University, and you should contact and rent directly from the respective owners. Please note that owners usually require a deposit equal to one or two months' rent in order to secure the apartment/studio. Any amount outside this range may raise suspicion. If you are unsure, we recommend visiting the apartment to confirm its condition before proceeding with any rent payment.\n\nIf you need any further assistance or have specific questions, please do not hesitate to contact us.`;
 
-// ── Load image through a canvas (any format, handles CORS) ────────────────────
+// ── Load a property image (JPEG output, white fill for transparency) ──────────
 function loadImageBase64(url) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -39,8 +39,33 @@ function loadImageBase64(url) {
         const canvas = document.createElement('canvas');
         canvas.width  = img.naturalWidth  || 800;
         canvas.height = img.naturalHeight || 600;
-        canvas.getContext('2d').drawImage(img, 0, 0);
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
         resolve(canvas.toDataURL('image/jpeg', 0.82));
+      } catch { resolve(null); }
+    };
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+}
+
+// ── Load the logo (white fill ensures no black background on transparent PNGs)
+function loadLogoBase64(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width  = img.naturalWidth  || 500;
+        canvas.height = img.naturalHeight || 200;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/jpeg', 0.95));
       } catch { resolve(null); }
     };
     img.onerror = () => resolve(null);
@@ -124,7 +149,7 @@ function addBanner(doc, logoBase64, pageNum, totalPages) {
   bold(doc, 11.5);
   doc.text('UNIC Accommodation Office', textX, BANNER / 2 - 1);
   norm(doc, 7.5);
-  doc.text('University of Nicosia — Off Campus Accommodation Database', textX, BANNER / 2 + 5);
+  doc.text('University of Nicosia Off Campus Accommodation Options', textX, BANNER / 2 + 5);
 
   // Page number
   bold(doc, 8);
@@ -264,23 +289,13 @@ function addDisclaimerPage(doc, logoBase64, pageNum, totalPages) {
   doc.text(lines, MX, y);
   y += lines.length * 9 * 0.3528 * 1.55 + 10;
 
-  // Contact box
-  fill(doc, [249, 250, 252]); draw(doc, C.border);
-  doc.setLineWidth(0.25);
-  const BOX_H = 20;
-  doc.roundedRect(MX, y, PAGE_W - MX * 2, BOX_H, 3, 3, 'FD');
-
-  rgb(doc, C.dark); bold(doc, 9);
-  doc.text('Accommodation Office — University of Nicosia', MX + 5, y + 7);
-  norm(doc, 8.5); rgb(doc, C.mid);
-  doc.text('Off-Campus Housing Assistance  ·  accommodation@unic.ac.cy', MX + 5, y + 13.5);
 }
 
 // ── Main export ───────────────────────────────────────────────────────────────
 export async function generateListingsPdf(listings, activeFilters = {}) {
   // Fetch logo and all property images in parallel
   const [logoBase64, ...imgData] = await Promise.all([
-    loadImageBase64('/unic-logo.png'),
+    loadLogoBase64('/unic-logo.png'),
     ...listings.map((l) => {
       const url = l.images?.[0]?.public_url;
       return url ? loadImageBase64(url) : Promise.resolve(null);
