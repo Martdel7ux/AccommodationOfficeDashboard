@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Loader2, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient.js';
 
@@ -141,7 +141,7 @@ export default function SignIn() {
 
           <p className="text-center text-xs text-slate-400">
             Access is restricted to authorised staff only.
-            <br />Contact your administrator to request an account.</p>
+            <br />Contact your administrator to request an account.
           </p>
 
           <p className="text-center text-xs text-slate-300 mt-10">
