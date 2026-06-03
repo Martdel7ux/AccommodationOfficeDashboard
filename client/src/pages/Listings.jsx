@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, FileDown, Mail, Loader2, Search, LayoutGrid, List, Pencil, Trash2, Sheet } from 'lucide-react';
+import { Plus, FileDown, Mail, Loader2, Search, LayoutGrid, List, Pencil, Trash2, FileSpreadsheet } from 'lucide-react';
 import { getAccommodations, deleteAccommodation } from '../utils/api.js';
 import { generateListingsPdf } from '../utils/exportPdf.js';
 import { generateListingsExcel } from '../utils/exportExcel.js';
@@ -144,7 +144,7 @@ export default function Listings() {
           </button>
           <button onClick={handleExportExcel} disabled={listings.length === 0} className="btn-secondary">
             <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg,#d1fae5,#a7f3d0)' }}>
-              <Sheet size={11} style={{ color: '#059669' }} />
+              <FileSpreadsheet size={11} style={{ color: '#059669' }} />
             </span>
             {t('listings.exportExcel')}
           </button>
