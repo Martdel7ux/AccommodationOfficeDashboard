@@ -10,6 +10,7 @@ import AddListing from './pages/AddListing.jsx';
 import EditListing from './pages/EditListing.jsx';
 import ViewListing from './pages/ViewListing.jsx';
 import Settings from './pages/Settings.jsx';
+import Flatmates from './pages/Flatmates.jsx';
 
 function ProtectedLayout() {
   const { user, loading } = useAuth();
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="/listings/:id/edit" element={<EditListing />} />
             <Route path="/listings/:id"      element={<ViewListing />} />
             <Route path="/settings"          element={<Settings />} />
+            <Route path="/flatmates"         element={<Flatmates />} />
           </Route>
 
           {/* Fallback */}

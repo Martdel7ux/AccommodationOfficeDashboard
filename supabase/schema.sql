@@ -54,6 +54,30 @@ CREATE TRIGGER trg_accommodations_updated_at
 ALTER TABLE accommodations       DISABLE ROW LEVEL SECURITY;
 ALTER TABLE accommodation_images DISABLE ROW LEVEL SECURITY;
 
+-- 5. Flatmate requests table
+CREATE TABLE IF NOT EXISTS flatmate_requests (
+  id                BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  first_name        TEXT NOT NULL,
+  last_name         TEXT NOT NULL,
+  phone             TEXT NOT NULL,
+  email             TEXT,
+  year_of_study     TEXT,
+  gender            TEXT NOT NULL DEFAULT 'prefer_not_to_say',
+  has_flat          BOOLEAN NOT NULL DEFAULT false,
+  notes             TEXT,
+  created_by_id     UUID,
+  created_by_name   TEXT,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE flatmate_requests DISABLE ROW LEVEL SECURITY;
+
+DROP TRIGGER IF EXISTS trg_flatmate_requests_updated_at ON flatmate_requests;
+CREATE TRIGGER trg_flatmate_requests_updated_at
+  BEFORE UPDATE ON flatmate_requests
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
 -- ============================================================
 -- STORAGE — run these AFTER creating the bucket in the dashboard
 -- Supabase Dashboard → Storage → New Bucket

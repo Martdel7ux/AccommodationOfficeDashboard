@@ -31,3 +31,13 @@ export const deleteAccommodation = (id) =>
 
 export const sendEmail = (payload) =>
   api.post('/export/email', payload).then((r) => r.data);
+
+// ── Flatmates ─────────────────────────────────────────────────────────────────
+export const getFlatmates    = (params = {}) =>
+  api.get('/flatmates', { params }).then((r) => r.data);
+
+export const createFlatmate  = (body) =>
+  api.post('/flatmates', body).then((r) => r.data);
+
+export const deleteFlatmate  = (id) =>
+  api.delete(`/flatmates/${id}`).then((r) => r.data);

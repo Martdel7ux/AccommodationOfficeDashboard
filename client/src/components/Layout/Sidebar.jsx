@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Home, PlusCircle, LogOut, ChevronRight, Download } from 'lucide-react';
+import { LayoutDashboard, Home, PlusCircle, LogOut, ChevronRight, Download, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useEffect, useState } from 'react';
 
@@ -7,6 +7,7 @@ const NAV = [
   { to: '/dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
   { to: '/listings',     label: 'All Listings', icon: Home },
   { to: '/listings/new', label: 'Add Listing',  icon: PlusCircle },
+  { to: '/flatmates',    label: 'Flat Mate',    icon: Users },
 ];
 
 export default function Sidebar() {
