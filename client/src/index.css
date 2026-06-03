@@ -31,18 +31,32 @@
            disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
   }
   .btn-primary {
-    @apply btn text-white shadow-sm hover:shadow-md active:scale-[0.98];
-    background: linear-gradient(135deg, #C41230 0%, #a50f28 100%);
+    @apply btn text-white active:scale-[0.98] focus:ring-primary-400;
+    background: linear-gradient(135deg, #E11740 0%, #C41230 55%, #A50F28 100%);
+    box-shadow: 0 4px 16px rgba(196,18,48,0.32), 0 1px 4px rgba(196,18,48,0.18), inset 0 1px 0 rgba(255,255,255,0.18);
+    letter-spacing: -0.01em;
+    transition: all 0.2s ease;
   }
-  .btn-primary:hover {
-    background: linear-gradient(135deg, #a50f28 0%, #880d22 100%);
+  .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #C41230 0%, #A50F28 55%, #880D22 100%);
+    box-shadow: 0 6px 24px rgba(196,18,48,0.42), 0 2px 8px rgba(196,18,48,0.24), inset 0 1px 0 rgba(255,255,255,0.18);
+    transform: translateY(-1px);
   }
   .btn-secondary {
-    @apply btn text-slate-700 border border-white/80 shadow-glass hover:shadow-glass-hover
-           active:scale-[0.98] focus:ring-primary-400;
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    @apply btn text-slate-700 active:scale-[0.98] focus:ring-primary-400;
+    background: linear-gradient(145deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.72) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.95);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1);
+    letter-spacing: -0.01em;
+    transition: all 0.2s ease;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: linear-gradient(145deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.88) 100%);
+    border-color: rgba(255,255,255,1);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1);
+    transform: translateY(-1px);
   }
   .btn-danger {
     @apply btn text-red-600 border border-red-200/60 hover:bg-red-50/80 focus:ring-red-400;

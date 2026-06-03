@@ -139,7 +139,11 @@ export default function Listings() {
             disabled={exporting || listings.length === 0}
             className="btn-secondary"
           >
-            {exporting ? <Loader2 size={15} className="animate-spin" /> : <FileDown size={15} />}
+            <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg,#ffe4e6,#fecdd3)' }}>
+              {exporting
+                ? <Loader2 size={11} className="animate-spin" style={{ color: '#C41230' }} />
+                : <FileDown size={11} style={{ color: '#C41230' }} />}
+            </span>
             Export PDF
           </button>
           <button
@@ -147,7 +151,9 @@ export default function Listings() {
             disabled={listings.length === 0}
             className="btn-secondary"
           >
-            <Sheet size={15} />
+            <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg,#d1fae5,#a7f3d0)' }}>
+              <Sheet size={11} style={{ color: '#059669' }} />
+            </span>
             Export Excel
           </button>
           <button
@@ -155,11 +161,13 @@ export default function Listings() {
             disabled={listings.length === 0}
             className="btn-secondary"
           >
-            <Mail size={15} />
+            <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg,#dbeafe,#bfdbfe)' }}>
+              <Mail size={11} style={{ color: '#2563eb' }} />
+            </span>
             Email
           </button>
           <button onClick={() => navigate('/listings/new')} className="btn-primary">
-            <Plus size={16} />
+            <Plus size={15} />
             Add Listing
           </button>
         </div>
