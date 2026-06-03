@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SlidersHorizontal, X, RotateCcw } from 'lucide-react';
+import { SlidersHorizontal, X, RotateCcw, Phone } from 'lucide-react';
 
 const TYPES     = ['apartment', 'studio', 'house', 'room'];
 const BEDROOMS  = [1, 2, 3, 4];
@@ -10,7 +10,7 @@ const AUDIENCES = [
 ];
 
 const DEFAULT_FILTERS = {
-  search: '', status: 'all', property_type: '', bedrooms: '',
+  search: '', phone: '', status: 'all', property_type: '', bedrooms: '',
   min_price: 0, max_price: 2000, target_audience: 'all',
   walking_distance: false, availability_from: '', availability_to: '',
 };
@@ -57,6 +57,29 @@ export default function FilterPanel({ filters, onChange }) {
           {filters.search && (
             <button
               onClick={() => set('search', '')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            >
+              <X size={13} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Phone number */}
+      <div>
+        <label className="form-label">Phone Number</label>
+        <div className="relative">
+          <Phone size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+          <input
+            type="tel"
+            className="form-input pl-8 pr-8"
+            placeholder="+357 99…"
+            value={filters.phone}
+            onChange={(e) => set('phone', e.target.value)}
+          />
+          {filters.phone && (
+            <button
+              onClick={() => set('phone', '')}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
             >
               <X size={13} />

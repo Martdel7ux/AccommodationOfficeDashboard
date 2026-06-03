@@ -32,6 +32,11 @@ function buildQuery(q) {
   if (q.availability_to)
     query = query.lte('availability_date', q.availability_to);
 
+  if (q.phone) {
+    const p = q.phone.replace(/'/g, "''");
+    query = query.ilike('phone', `%${p}%`);
+  }
+
   if (q.search) {
     const s = q.search.replace(/'/g, "''");
     query = query.or(

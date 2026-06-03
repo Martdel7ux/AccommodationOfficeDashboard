@@ -9,7 +9,7 @@ import EmailModal from '../components/Listings/EmailModal.jsx';
 import { StatusBadge } from '../components/common/Badge.jsx';
 
 const DEFAULT_FILTERS = {
-  search: '', status: 'all', property_type: '', bedrooms: '',
+  search: '', phone: '', status: 'all', property_type: '', bedrooms: '',
   min_price: 0, max_price: 2000, target_audience: 'all',
   walking_distance: false, availability_from: '', availability_to: '',
 };
@@ -17,6 +17,7 @@ const DEFAULT_FILTERS = {
 function buildApiParams(f) {
   const p = {};
   if (f.search)              p.search           = f.search;
+  if (f.phone)               p.phone            = f.phone;
   if (f.status !== 'all')    p.status           = f.status;
   if (f.property_type)       p.property_type    = f.property_type;
   if (f.bedrooms)            p.bedrooms         = f.bedrooms;
