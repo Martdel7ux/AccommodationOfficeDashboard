@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from 'react';
 const T = {
   en: {
     nav: {
-      navigation:   'Navigation',
+      navigation:   'Menu',
       dashboard:    'Dashboard',
       allListings:  'All Listings',
       addListing:   'Add Listing',
@@ -163,7 +163,7 @@ const T = {
   // ── Greek ───────────────────────────────────────────────────────────────────
   el: {
     nav: {
-      navigation:   'Πλοήγηση',
+      navigation:   'Μενού',
       dashboard:    'Πίνακας Ελέγχου',
       allListings:  'Όλες οι Αγγελίες',
       addListing:   'Νέα Αγγελία',
