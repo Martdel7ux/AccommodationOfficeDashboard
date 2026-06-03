@@ -38,7 +38,7 @@ export default function Dashboard() {
       {/* Page header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="page-title">{greeting}! 👋</h1>
+          <h1 className="page-title">{greeting}!</h1>
           <p className="page-subtitle">Here's your accommodation overview for today.</p>
         </div>
         <button
