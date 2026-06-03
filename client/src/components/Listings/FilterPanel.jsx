@@ -162,7 +162,7 @@ export default function FilterPanel({ filters, onChange }) {
                   : 'bg-white text-slate-600 border-slate-200 hover:border-primary-300'
               }`}
             >
-              {b}+
+              {b}
             </button>
           ))}
         </div>
