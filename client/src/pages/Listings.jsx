@@ -4,6 +4,7 @@ import { Plus, FileDown, Mail, Loader2, Search, LayoutGrid, List, Pencil, Trash2
 import { getAccommodations, deleteAccommodation } from '../utils/api.js';
 import { generateListingsPdf } from '../utils/exportPdf.js';
 import { generateListingsExcel } from '../utils/exportExcel.js';
+import { useLanguage } from '../context/LanguageContext.jsx';
 import FilterPanel from '../components/Listings/FilterPanel.jsx';
 import ListingCard from '../components/Listings/ListingCard.jsx';
 import LoadingSpinner from '../components/common/LoadingSpinner.jsx';
@@ -86,6 +87,7 @@ function ListingRow({ listing: l, onDelete }) {
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function Listings() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [listings, setListings]   = useState([]);
   const [loading, setLoading]     = useState(true);
   const [exporting, setExporting] = useState(false);
@@ -128,47 +130,33 @@ export default function Listings() {
       {/* Page header */}
       <div className="page-header mb-4">
         <div>
-          <h1 className="page-title">Listings</h1>
+          <h1 className="page-title">{t('listings.title')}</h1>
           <p className="page-subtitle">
-            {loading ? 'Loading…' : `${listings.length} propert${listings.length !== 1 ? 'ies' : 'y'} found`}
+            {loading ? t('listings.loading') : `${listings.length} ${listings.length !== 1 ? t('listings.foundMany') : t('listings.found1')}`}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleExportPdf}
-            disabled={exporting || listings.length === 0}
-            className="btn-secondary"
-          >
+          <button onClick={handleExportPdf} disabled={exporting || listings.length === 0} className="btn-secondary">
             <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg,#ffe4e6,#fecdd3)' }}>
-              {exporting
-                ? <Loader2 size={11} className="animate-spin" style={{ color: '#C41230' }} />
-                : <FileDown size={11} style={{ color: '#C41230' }} />}
+              {exporting ? <Loader2 size={11} className="animate-spin" style={{ color: '#C41230' }} /> : <FileDown size={11} style={{ color: '#C41230' }} />}
             </span>
-            Export PDF
+            {t('listings.exportPdf')}
           </button>
-          <button
-            onClick={handleExportExcel}
-            disabled={listings.length === 0}
-            className="btn-secondary"
-          >
+          <button onClick={handleExportExcel} disabled={listings.length === 0} className="btn-secondary">
             <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg,#d1fae5,#a7f3d0)' }}>
               <Sheet size={11} style={{ color: '#059669' }} />
             </span>
-            Export Excel
+            {t('listings.exportExcel')}
           </button>
-          <button
-            onClick={() => setEmailOpen(true)}
-            disabled={listings.length === 0}
-            className="btn-secondary"
-          >
+          <button onClick={() => setEmailOpen(true)} disabled={listings.length === 0} className="btn-secondary">
             <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg,#dbeafe,#bfdbfe)' }}>
               <Mail size={11} style={{ color: '#2563eb' }} />
             </span>
-            Email
+            {t('listings.email')}
           </button>
           <button onClick={() => navigate('/listings/new')} className="btn-primary">
             <Plus size={15} />
-            Add Listing
+            {t('listings.addListing')}
           </button>
         </div>
       </div>
@@ -209,9 +197,9 @@ export default function Listings() {
           {!loading && listings.length === 0 && (
             <div className="card flex flex-col items-center justify-center py-16 gap-3">
               <Search size={32} className="text-slate-200" />
-              <p className="text-slate-500 text-sm font-medium">No listings match your filters</p>
+              <p className="text-slate-500 text-sm font-medium">{t('listings.noMatch')}</p>
               <button onClick={() => setFilters(DEFAULT_FILTERS)} className="btn-secondary btn-sm">
-                Clear filters
+                {t('listings.clearFilters')}
               </button>
             </div>
           )}

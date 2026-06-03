@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { MapPin, User, Bed, Footprints, Eye, Pencil, Trash2, ImageIcon } from 'lucide-react';
 import { StatusBadge, PropertyTypeBadge, AudienceBadge } from '../common/Badge.jsx';
+import { useLanguage } from '../../context/LanguageContext.jsx';
 
 export default function ListingCard({ listing, onDelete }) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const l = listing;
   const mainImage = l.images?.[0];
 
@@ -28,7 +30,7 @@ export default function ListingCard({ listing, onDelete }) {
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-slate-300">
             <ImageIcon size={32} />
-            <p className="text-xs">No image</p>
+            <p className="text-xs">{t('listings.noImage')}</p>
           </div>
         )}
         {/* Overlay badges */}
@@ -51,7 +53,7 @@ export default function ListingCard({ listing, onDelete }) {
             {l.bedrooms && (
               <span className="badge badge-gray">
                 <Bed size={10} />
-                {l.bedrooms} bed
+                {l.bedrooms} {t('property.bed')}
               </span>
             )}
           </div>
@@ -86,7 +88,7 @@ export default function ListingCard({ listing, onDelete }) {
           {!!l.walking_distance && (
             <span className="text-[10px] font-medium text-emerald-600 bg-emerald-50 rounded px-1.5 py-0.5 flex items-center gap-0.5">
               <Footprints size={9} />
-              Walking distance
+              {t('property.walkingDist')}
             </span>
           )}
           {l.availability_date && (
@@ -110,14 +112,14 @@ export default function ListingCard({ listing, onDelete }) {
             className="btn-ghost btn-sm flex-1 justify-center"
           >
             <Eye size={13} />
-            View
+            {t('listings.view')}
           </button>
           <button
             onClick={() => navigate(`/listings/${l.id}/edit`)}
             className="btn-secondary btn-sm flex-1 justify-center"
           >
             <Pencil size={13} />
-            Edit
+            {t('listings.edit')}
           </button>
           <button
             onClick={handleDelete}

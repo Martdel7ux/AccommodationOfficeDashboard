@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, UserCircle } from 'lucide-react';
 import { StatusBadge, PropertyTypeBadge } from '../common/Badge.jsx';
+import { useLanguage } from '../../context/LanguageContext.jsx';
 
 function formatAdded(dateStr) {
   const d = new Date(dateStr);
@@ -11,24 +12,25 @@ function formatAdded(dateStr) {
 
 export default function RecentListings({ listings = [] }) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <div className="card">
       <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid rgba(203,213,225,0.25)' }}>
         <div className="flex items-center gap-2.5">
           <div style={{ width: 3, height: 18, borderRadius: 99, background: 'linear-gradient(180deg, #C41230 0%, #C4123044 100%)', flexShrink: 0 }} />
-          <h3 className="text-sm font-bold text-slate-800 tracking-tight">Recent Listings</h3>
+          <h3 className="text-sm font-bold text-slate-800 tracking-tight">{t('dashboard.recentListings')}</h3>
         </div>
         <button
           onClick={() => navigate('/listings')}
           className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors"
         >
-          View all <ArrowRight size={13} />
+          {t('dashboard.viewAll')} <ArrowRight size={13} />
         </button>
       </div>
       <div style={{ divide: 'unset' }}>
         {listings.length === 0 && (
-          <div className="px-6 py-8 text-center text-sm text-slate-400">No listings yet</div>
+          <div className="px-6 py-8 text-center text-sm text-slate-400">{t('dashboard.noListings')}</div>
         )}
         {listings.map((l, idx) => (
           <div

@@ -2,12 +2,14 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Label,
 } from 'recharts';
+import { useLanguage } from '../../context/LanguageContext.jsx';
 
-const TYPE_LABELS = {
-  apartment: 'Apartment', studio: 'Studio', house: 'House', room: 'Room',
+const TYPE_KEYS = {
+  apartment: 'property.apartment', studio: 'property.studio',
+  house: 'property.house', room: 'property.room',
 };
-const AUDIENCE_LABELS = {
-  'full-time': 'Full-time', erasmus: 'Erasmus', both: 'Both',
+const AUDIENCE_KEYS = {
+  'full-time': 'property.fullTime', erasmus: 'property.erasmus', both: 'property.allStudents',
 };
 
 // ── Premium glass tooltip ─────────────────────────────────────────────────────
@@ -132,13 +134,14 @@ function NoData() {
 
 // ── 1. Listings by Property Type ──────────────────────────────────────────────
 export function PropertyTypeChart({ data = [] }) {
+  const { t } = useLanguage();
   const chartData = data.map((d) => ({
-    name: TYPE_LABELS[d.property_type] || d.property_type,
+    name: t(TYPE_KEYS[d.property_type] || d.property_type),
     count: d.count,
   }));
 
   return (
-    <ChartCard title="Listings by Property Type" accent="#C41230">
+    <ChartCard title={t('dashboard.byType')} accent="#C41230">
       {chartData.length === 0 ? <NoData /> : (
         <ResponsiveContainer width="100%" height={210}>
           <BarChart data={chartData} barCategoryGap="38%" margin={{ top: 6, right: 4, left: -22, bottom: 0 }}>
@@ -178,14 +181,15 @@ export function PropertyTypeChart({ data = [] }) {
 
 // ── 2. Availability Status ────────────────────────────────────────────────────
 export function AvailabilityChart({ available = 0, unavailable = 0 }) {
+  const { t } = useLanguage();
   const total = available + unavailable;
   const data  = [
-    { name: 'Available',   value: available,   color: '#10B981' },
-    { name: 'Unavailable', value: unavailable, color: '#EF4444' },
+    { name: t('dashboard.available'),   value: available,   color: '#10B981' },
+    { name: t('dashboard.unavailable'), value: unavailable, color: '#EF4444' },
   ].filter((d) => d.value > 0);
 
   return (
-    <ChartCard title="Availability Status" accent="#10B981" badge={total}>
+    <ChartCard title={t('dashboard.byAvailability')} accent="#10B981" badge={total}>
       {total === 0 ? <NoData /> : (
         <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
           {/* Donut */}
@@ -251,13 +255,14 @@ export function AvailabilityChart({ available = 0, unavailable = 0 }) {
 
 // ── 3. Listings by Bedrooms ───────────────────────────────────────────────────
 export function BedroomsChart({ data = [] }) {
+  const { t } = useLanguage();
   const chartData = data.map((d) => ({
-    name: d.bedrooms ? `${d.bedrooms} Bed` : 'Studio',
+    name: d.bedrooms ? `${d.bedrooms} ${t('property.bed')}` : t('property.studio'),
     count: d.count,
   }));
 
   return (
-    <ChartCard title="Listings by Bedrooms" accent="#7C3AED">
+    <ChartCard title={t('dashboard.byBedrooms')} accent="#7C3AED">
       {chartData.length === 0 ? <NoData /> : (
         <ResponsiveContainer width="100%" height={210}>
           <BarChart data={chartData} barCategoryGap="38%" margin={{ top: 6, right: 4, left: -22, bottom: 0 }}>
@@ -299,15 +304,16 @@ export function BedroomsChart({ data = [] }) {
 const AUDIENCE_COLORS = ['#C41230', '#3B82F6', '#F59E0B'];
 
 export function AudienceChart({ data = [] }) {
+  const { t } = useLanguage();
   const chartData = data.map((d, i) => ({
-    name:  AUDIENCE_LABELS[d.target_audience] || d.target_audience,
+    name:  t(AUDIENCE_KEYS[d.target_audience] || d.target_audience),
     value: d.count,
     color: AUDIENCE_COLORS[i % AUDIENCE_COLORS.length],
   }));
   const total = chartData.reduce((s, d) => s + d.value, 0);
 
   return (
-    <ChartCard title="Target Audience" accent="#3B82F6" badge={total}>
+    <ChartCard title={t('dashboard.byAudience')} accent="#3B82F6" badge={total}>
       {total === 0 ? <NoData /> : (
         <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
           {/* Donut */}
