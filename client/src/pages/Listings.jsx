@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, FileDown, Mail, Loader2, Search, LayoutGrid, List, Pencil, Trash2 } from 'lucide-react';
-import { getAccommodations, deleteAccommodation, exportPdf } from '../utils/api.js';
+import { getAccommodations, deleteAccommodation } from '../utils/api.js';
+import { generateListingsPdf } from '../utils/exportPdf.js';
 import FilterPanel from '../components/Listings/FilterPanel.jsx';
 import ListingCard from '../components/Listings/ListingCard.jsx';
 import LoadingSpinner from '../components/common/LoadingSpinner.jsx';
@@ -113,7 +114,7 @@ export default function Listings() {
 
   const handleExportPdf = async () => {
     setExporting(true);
-    await exportPdf(buildApiParams(filters)).catch(console.error);
+    await generateListingsPdf(listings, filters).catch(console.error);
     setExporting(false);
   };
 

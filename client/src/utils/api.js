@@ -29,18 +29,5 @@ export const updateAccommodation = (id, body) =>
 export const deleteAccommodation = (id) =>
   api.delete(`/accommodations/${id}`).then((r) => r.data);
 
-// ── Export ────────────────────────────────────────────────────────────────────
-export const exportPdf = async (filters = {}) => {
-  const response = await api.post('/export/pdf', { filters }, { responseType: 'blob' });
-  const url = URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-  const a   = document.createElement('a');
-  a.href     = url;
-  a.download = `UNIC-Accommodations-${new Date().toISOString().slice(0, 10)}.pdf`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-};
-
 export const sendEmail = (payload) =>
   api.post('/export/email', payload).then((r) => r.data);
