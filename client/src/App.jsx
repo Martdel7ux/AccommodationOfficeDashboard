@@ -34,7 +34,7 @@ export default function App() {
         <AuthProvider>
           <Routes>
             <Route path="/signin" element={<PublicRoute><SignIn /></PublicRoute>} />
-            <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
+            <Route path="/signup" element={<Navigate to="/signin" replace />} />
 
             <Route element={<ProtectedLayout />}>
               <Route index element={<Navigate to="/dashboard" replace />} />

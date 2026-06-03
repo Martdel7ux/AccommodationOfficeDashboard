@@ -139,14 +139,9 @@ export default function SignIn() {
             <div className="flex-1 h-px bg-slate-100" />
           </div>
 
-          <p className="text-center text-sm text-slate-500">
-            Don't have an account?{' '}
-            <Link
-              to="/signup"
-              className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
-            >
-              Create one
-            </Link>
+          <p className="text-center text-xs text-slate-400">
+            Access is restricted to authorised staff only.
+            <br />Contact your administrator to request an account.</p>
           </p>
 
           <p className="text-center text-xs text-slate-300 mt-10">
