@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS accommodations (
   first_name          TEXT NOT NULL,
   last_name           TEXT NOT NULL,
   phone               TEXT NOT NULL,
-  email               TEXT NOT NULL,
+  email               TEXT,
   property_type       TEXT NOT NULL DEFAULT 'apartment',
   bedrooms            INTEGER,
   price               NUMERIC(10,2) NOT NULL,

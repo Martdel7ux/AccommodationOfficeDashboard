@@ -68,7 +68,7 @@ export default function AccommodationForm({ initialData, onSubmit, isLoading }) 
   const watchedWalk     = watch('walking_distance');
 
   const STEP_FIELDS = {
-    1: ['first_name', 'last_name', 'phone', 'email'],
+    1: ['first_name', 'last_name', 'phone'],
     2: ['property_type', 'price', 'address', 'availability_status'],
   };
 
@@ -170,14 +170,13 @@ export default function AccommodationForm({ initialData, onSubmit, isLoading }) 
             </div>
 
             <div>
-              <label className="form-label">Email Address *</label>
+              <label className="form-label">Email Address</label>
               <input
                 {...register('email', {
-                  required: 'Required',
                   pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email address' },
                 })}
                 className={`form-input ${errors.email ? 'error' : ''}`}
-                placeholder="landlord@example.com"
+                placeholder="landlord@example.com (optional)"
                 type="email"
               />
               {errors.email && <p className="form-error">{errors.email.message}</p>}
