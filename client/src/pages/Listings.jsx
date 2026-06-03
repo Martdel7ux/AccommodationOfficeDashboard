@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, FileDown, Mail, Loader2, Search, LayoutGrid, List, Pencil, Trash2 } from 'lucide-react';
+import { Plus, FileDown, Mail, Loader2, Search, LayoutGrid, List, Pencil, Trash2, Sheet } from 'lucide-react';
 import { getAccommodations, deleteAccommodation } from '../utils/api.js';
 import { generateListingsPdf } from '../utils/exportPdf.js';
+import { generateListingsExcel } from '../utils/exportExcel.js';
 import FilterPanel from '../components/Listings/FilterPanel.jsx';
 import ListingCard from '../components/Listings/ListingCard.jsx';
 import LoadingSpinner from '../components/common/LoadingSpinner.jsx';
@@ -118,6 +119,10 @@ export default function Listings() {
     setExporting(false);
   };
 
+  const handleExportExcel = () => {
+    generateListingsExcel(listings);
+  };
+
   return (
     <div className="animate-fade-in">
       {/* Page header */}
@@ -136,6 +141,14 @@ export default function Listings() {
           >
             {exporting ? <Loader2 size={15} className="animate-spin" /> : <FileDown size={15} />}
             Export PDF
+          </button>
+          <button
+            onClick={handleExportExcel}
+            disabled={listings.length === 0}
+            className="btn-secondary"
+          >
+            <Sheet size={15} />
+            Export Excel
           </button>
           <button
             onClick={() => setEmailOpen(true)}
