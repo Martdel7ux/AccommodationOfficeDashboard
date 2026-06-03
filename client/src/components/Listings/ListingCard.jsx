@@ -96,6 +96,13 @@ export default function ListingCard({ listing, onDelete }) {
           )}
         </div>
 
+        {/* Added by */}
+        {l.created_by_name && (
+          <p className="text-[10px] text-slate-400 truncate">
+            Added by <span className="font-medium text-slate-500">{l.created_by_name}</span>
+          </p>
+        )}
+
         {/* Actions */}
         <div className="flex gap-1.5 pt-1 border-t border-slate-100 mt-auto">
           <button

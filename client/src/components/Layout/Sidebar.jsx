@@ -11,7 +11,7 @@ const NAV = [
 
 export default function Sidebar() {
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
   const { user, signOut } = useAuth();
 
   const [installPrompt, setInstallPrompt] = useState(null);
@@ -44,9 +44,21 @@ export default function Sidebar() {
     : email.slice(0, 2).toUpperCase();
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-64 bg-white border-r border-slate-200 flex flex-col z-30">
+    <aside
+      className="fixed top-0 left-0 h-screen w-64 flex flex-col z-30"
+      style={{
+        background: 'rgba(255,255,255,0.75)',
+        backdropFilter: 'blur(32px)',
+        WebkitBackdropFilter: 'blur(32px)',
+        borderRight: '1px solid rgba(255,255,255,0.7)',
+        boxShadow: '4px 0 32px rgba(0,0,0,0.06)',
+      }}
+    >
       {/* Brand logo */}
-      <div className="px-5 py-4 border-b border-slate-100">
+      <div
+        className="px-5 py-4"
+        style={{ borderBottom: '1px solid rgba(203,213,225,0.3)' }}
+      >
         <img
           src="/unic-logo.png"
           alt="UNIC Accommodation Office"
@@ -56,10 +68,10 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 overflow-y-auto">
-        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest px-2 mb-2">
+        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-3">
           Navigation
         </p>
-        <ul className="space-y-0.5">
+        <ul className="space-y-1">
           {NAV.map(({ to, label, icon: Icon }) => {
             const active =
               to === '/dashboard'
@@ -71,18 +83,43 @@ export default function Sidebar() {
               <li key={to}>
                 <NavLink
                   to={to}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group
-                    ${active
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                    }`}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold
+                    transition-all duration-200 group relative
+                    ${active ? 'text-primary-700' : 'text-slate-600 hover:text-slate-900'}`}
+                  style={active ? {
+                    background: 'linear-gradient(135deg, rgba(196,18,48,0.10) 0%, rgba(255,77,109,0.06) 100%)',
+                    border: '1px solid rgba(196,18,48,0.15)',
+                    boxShadow: '0 2px 8px rgba(196,18,48,0.08), inset 0 1px 0 rgba(255,255,255,0.8)',
+                  } : {
+                    background: 'transparent',
+                    border: '1px solid transparent',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.6)';
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.8)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.borderColor = 'transparent';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }
+                  }}
                 >
-                  <Icon
-                    size={17}
-                    className={`flex-shrink-0 transition-colors ${
-                      active ? 'text-primary-600' : 'text-slate-400 group-hover:text-slate-600'
-                    }`}
-                  />
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200"
+                    style={active ? {
+                      background: 'linear-gradient(135deg, #C41230, #E11740)',
+                      boxShadow: '0 4px 12px rgba(196,18,48,0.30)',
+                    } : {
+                      background: 'rgba(148,163,184,0.12)',
+                    }}
+                  >
+                    <Icon size={14} className={active ? 'text-white' : 'text-slate-400 group-hover:text-slate-600'} />
+                  </div>
                   <span className="flex-1">{label}</span>
                   {active && <ChevronRight size={13} className="text-primary-400" />}
                 </NavLink>
@@ -97,11 +134,15 @@ export default function Sidebar() {
         <div className="px-4 pb-3">
           <button
             onClick={handleInstall}
-            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-primary-50 hover:bg-primary-100 border border-primary-200 transition-colors text-left"
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left"
+            style={{
+              background: 'linear-gradient(135deg, rgba(196,18,48,0.08), rgba(255,77,109,0.05))',
+              border: '1px solid rgba(196,18,48,0.15)',
+            }}
           >
             <Download size={15} className="text-primary-600 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-xs font-semibold text-primary-700 leading-tight">Install App</p>
+              <p className="text-xs font-bold text-primary-700 leading-tight">Install App</p>
               <p className="text-[10px] text-primary-500 leading-tight mt-0.5">Open without a browser</p>
             </div>
           </button>
@@ -109,30 +150,43 @@ export default function Sidebar() {
       )}
 
       {/* User profile + logout */}
-      <div className="px-4 py-4 border-t border-slate-100">
-        <div className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-slate-50 transition-colors">
-          {/* Avatar — click goes to settings */}
+      <div
+        className="px-4 py-4"
+        style={{ borderTop: '1px solid rgba(203,213,225,0.3)' }}
+      >
+        <div
+          className="flex items-center gap-3 px-2 py-2 rounded-xl transition-all duration-200"
+          style={{ cursor: 'default' }}
+        >
           <button
             onClick={() => navigate('/settings')}
             className="flex items-center gap-3 flex-1 min-w-0 text-left"
             title="Account settings"
           >
-            <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center flex-shrink-0">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{
+                background: 'linear-gradient(135deg, #C41230, #E11740)',
+                boxShadow: '0 4px 12px rgba(196,18,48,0.30)',
+              }}
+            >
               <span className="text-xs font-bold text-white">{initials}</span>
             </div>
             <div className="min-w-0">
               {fullName && (
-                <p className="text-xs font-semibold text-slate-800 truncate">{fullName}</p>
+                <p className="text-xs font-bold text-slate-800 truncate">{fullName}</p>
               )}
               <p className="text-[11px] text-slate-400 truncate">{email}</p>
             </div>
           </button>
 
-          {/* Logout */}
           <button
             onClick={handleSignOut}
             title="Sign out"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors flex-shrink-0"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 transition-colors flex-shrink-0"
+            style={{ background: 'rgba(148,163,184,0.08)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(254,242,242,0.8)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(148,163,184,0.08)'; }}
           >
             <LogOut size={14} />
           </button>

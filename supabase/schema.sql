@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS accommodations (
   furnishing_status   TEXT,
   walking_distance    BOOLEAN NOT NULL DEFAULT false,
   description         TEXT,
+  created_by_id       UUID,
+  created_by_name     TEXT,
   created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

@@ -2,16 +2,22 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { createAccommodation } from '../utils/api.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import AccommodationForm from '../components/Forms/AccommodationForm.jsx';
 
 export default function AddListing() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (formData) => {
     setIsLoading(true);
     try {
-      const created = await createAccommodation(formData);
+      const created = await createAccommodation({
+        ...formData,
+        created_by_id:   user?.id   || null,
+        created_by_name: user?.user_metadata?.full_name || user?.email || null,
+      });
       navigate(`/listings/${created.id}`);
     } finally {
       setIsLoading(false);

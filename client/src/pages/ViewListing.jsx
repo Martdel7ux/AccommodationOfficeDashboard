@@ -236,8 +236,27 @@ export default function ViewListing() {
           </div>
 
           {/* Metadata */}
-          <div className="card px-5 py-4">
-            <div className="flex justify-between text-xs text-slate-400">
+          <div className="card px-5 py-4 space-y-2">
+            {l.created_by_name && (
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                  <span className="text-[10px] font-bold text-primary-600">
+                    {l.created_by_name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">
+                    Added by <span className="font-medium text-slate-700">{l.created_by_name}</span>
+                  </p>
+                  <p className="text-[11px] text-slate-400">
+                    {new Date(l.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
+                    {' · '}
+                    {new Date(l.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              </div>
+            )}
+            <div className="flex justify-between text-xs text-slate-400 pt-1 border-t border-slate-100">
               <span>Added {new Date(l.created_at).toLocaleDateString('en-GB')}</span>
               {l.updated_at !== l.created_at && (
                 <span>Updated {new Date(l.updated_at).toLocaleDateString('en-GB')}</span>

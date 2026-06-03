@@ -67,6 +67,8 @@ module.exports = async (req, res) => {
         availability_date, availability_status, target_audience,
         furnishing_status, walking_distance, description,
         image_urls = [],
+        created_by_id   = null,
+        created_by_name = null,
       } = req.body;
 
       const { data: acc, error } = await supabase
@@ -83,6 +85,8 @@ module.exports = async (req, res) => {
           furnishing_status:   furnishing_status   || null,
           walking_distance:    walking_distance === true || walking_distance === 'true',
           description:         description         || null,
+          created_by_id:       created_by_id       || null,
+          created_by_name:     created_by_name     || null,
         }])
         .select()
         .single();
