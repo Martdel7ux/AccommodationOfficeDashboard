@@ -324,3 +324,4 @@ export async function generateListingsPdf(listings, activeFilters = {}) {
   const filename = `UNIC-Accommodations-${new Date().toISOString().slice(0, 10)}.pdf`;
   doc.save(filename);
 }
+

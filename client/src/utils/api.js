@@ -32,6 +32,7 @@ export const deleteAccommodation = (id) =>
 export const sendEmail = (payload) =>
   api.post('/export/email', payload).then((r) => r.data);
 
+
 // ── Flatmates ─────────────────────────────────────────────────────────────────
 export const getFlatmates    = (params = {}) =>
   api.get('/flatmates', { params }).then((r) => r.data);
