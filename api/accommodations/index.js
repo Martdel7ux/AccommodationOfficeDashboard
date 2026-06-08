@@ -1,5 +1,6 @@
-const { supabase } = require('../_db');
-const { cors }     = require('../_cors');
+const { supabase }    = require('../_db');
+const { cors }        = require('../_cors');
+const { requireAuth } = require('../_auth');
 
 // ── Filter builder ────────────────────────────────────────────────────────────
 function buildQuery(q) {
@@ -50,6 +51,9 @@ function buildQuery(q) {
 // ── Handler ───────────────────────────────────────────────────────────────────
 module.exports = async (req, res) => {
   if (cors(req, res)) return;
+
+  const user = await requireAuth(req, res);
+  if (!user) return;
 
   // GET /api/accommodations
   if (req.method === 'GET') {

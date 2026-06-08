@@ -1,6 +1,7 @@
-const nodemailer   = require('nodemailer');
-const { supabase } = require('../_db');
-const { cors }     = require('../_cors');
+const nodemailer      = require('nodemailer');
+const { supabase }    = require('../_db');
+const { cors }        = require('../_cors');
+const { requireAuth } = require('../_auth');
 
 function getFiltered(all, filters = {}) {
   return all.filter((a) => {
@@ -19,6 +20,9 @@ function getFiltered(all, filters = {}) {
 module.exports = async (req, res) => {
   if (cors(req, res)) return;
   if (req.method !== 'POST') return res.status(405).end();
+
+  const user = await requireAuth(req, res);
+  if (!user) return;
 
   try {
     const { to, subject, message, filters, sender_name, sender_email } = req.body;

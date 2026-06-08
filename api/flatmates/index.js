@@ -1,8 +1,12 @@
-const { supabase } = require('../_db');
-const { cors }     = require('../_cors');
+const { supabase }    = require('../_db');
+const { cors }        = require('../_cors');
+const { requireAuth } = require('../_auth');
 
 module.exports = async (req, res) => {
   if (cors(req, res)) return;
+
+  const user = await requireAuth(req, res);
+  if (!user) return;
 
   // ── GET /api/flatmates ──────────────────────────────────────────────────────
   if (req.method === 'GET') {

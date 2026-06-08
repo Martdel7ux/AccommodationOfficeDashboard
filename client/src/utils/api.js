@@ -1,6 +1,16 @@
 import axios from 'axios';
+import { supabase } from '../lib/supabaseClient';
 
 const api = axios.create({ baseURL: '/api' });
+
+// Attach the logged-in user's JWT to every request
+api.interceptors.request.use(async (config) => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.access_token) {
+    config.headers.Authorization = `Bearer ${session.access_token}`;
+  }
+  return config;
+});
 
 // Supabase returns the related table as `accommodation_images`; normalise to `images`
 const normalizeImages = (acc) => {

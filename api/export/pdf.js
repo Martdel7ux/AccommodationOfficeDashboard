@@ -1,8 +1,9 @@
-const path        = require('path');
-const fs          = require('fs');
-const PDFDocument = require('pdfkit');
-const { supabase } = require('../_db');
-const { cors }     = require('../_cors');
+const path            = require('path');
+const fs              = require('fs');
+const PDFDocument     = require('pdfkit');
+const { supabase }    = require('../_db');
+const { cors }        = require('../_cors');
+const { requireAuth } = require('../_auth');
 
 const LOGO = path.join(__dirname, '..', 'assets', 'unic-logo-white.png');
 
@@ -23,6 +24,9 @@ function getFiltered(all, filters = {}) {
 module.exports = async (req, res) => {
   if (cors(req, res)) return;
   if (req.method !== 'POST') return res.status(405).end();
+
+  const user = await requireAuth(req, res);
+  if (!user) return;
 
   try {
     const { data: all } = await supabase.from('accommodations').select('*');

@@ -1,9 +1,13 @@
-const { supabase } = require('../_db');
-const { cors }     = require('../_cors');
+const { supabase }    = require('../_db');
+const { cors }        = require('../_cors');
+const { requireAuth } = require('../_auth');
 
 module.exports = async (req, res) => {
   if (cors(req, res)) return;
   if (req.method !== 'GET') return res.status(405).end();
+
+  const user = await requireAuth(req, res);
+  if (!user) return;
 
   try {
     const { data: all, error } = await supabase
