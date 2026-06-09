@@ -322,6 +322,26 @@ export async function generateListingsPdf(listings, activeFilters = {}) {
   addDisclaimerPage(doc, logoBase64, totalPages, totalPages);
 
   const filename = `UNIC-Accommodations-${new Date().toISOString().slice(0, 10)}.pdf`;
-  doc.save(filename);
+  const blob = doc.output('blob');
+
+  if (typeof window.showSaveFilePicker === 'function') {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: filename,
+        types: [{ description: 'PDF Document', accept: { 'application/pdf': ['.pdf'] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+    } catch (err) {
+      // User cancelled — do nothing. Any other error falls back to direct download.
+      if (err.name !== 'AbortError') {
+        doc.save(filename);
+      }
+    }
+  } else {
+    // Firefox / Safari fallback — direct download
+    doc.save(filename);
+  }
 }
 
