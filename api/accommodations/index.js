@@ -33,11 +33,6 @@ function buildQuery(q) {
   if (q.availability_to)
     query = query.lte('availability_date', q.availability_to);
 
-  if (q.phone) {
-    const p = q.phone.replace(/'/g, "''");
-    query = query.ilike('phone', `%${p}%`);
-  }
-
   if (q.search) {
     const s = q.search.replace(/'/g, "''");
     query = query.or(
@@ -60,7 +55,18 @@ module.exports = async (req, res) => {
     try {
       const { data, error } = await buildQuery(req.query);
       if (error) return res.status(500).json({ error: error.message });
-      return res.json(data);
+
+      let result = data;
+      if (req.query.phone) {
+        const digits = req.query.phone.replace(/\D/g, '');
+        if (digits.length > 0) {
+          result = result.filter((item) =>
+            (item.phone || '').replace(/\D/g, '').includes(digits)
+          );
+        }
+      }
+
+      return res.json(result);
     } catch (err) {
       console.error(err);
       return res.status(500).json({ error: 'Failed to fetch accommodations' });

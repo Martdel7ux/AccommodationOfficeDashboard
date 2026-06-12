@@ -24,16 +24,26 @@ module.exports = async (req, res) => {
       if (year_of_study && year_of_study !== 'all') {
         query = query.eq('year_of_study', year_of_study);
       }
-      if (search) {
-        const s = search.replace(/'/g, "''");
-        query = query.or(
-          `first_name.ilike.%${s}%,last_name.ilike.%${s}%,phone.ilike.%${s}%,email.ilike.%${s}%`
-        );
-      }
-
       const { data, error } = await query.order('created_at', { ascending: false });
       if (error) return res.status(500).json({ error: error.message });
-      return res.json(data);
+
+      let result = data;
+      if (search) {
+        const lower = search.toLowerCase();
+        const digits = search.replace(/\D/g, '');
+        result = result.filter((item) => {
+          const fullName = `${item.first_name} ${item.last_name}`.toLowerCase();
+          const email    = (item.email || '').toLowerCase();
+          const phone    = (item.phone || '').replace(/\D/g, '');
+          return (
+            fullName.includes(lower) ||
+            email.includes(lower) ||
+            (digits.length > 0 && phone.includes(digits))
+          );
+        });
+      }
+
+      return res.json(result);
     } catch (err) {
       return res.status(500).json({ error: 'Failed to fetch flatmate requests' });
     }
