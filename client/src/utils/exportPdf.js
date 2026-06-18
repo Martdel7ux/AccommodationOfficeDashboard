@@ -121,14 +121,6 @@ function addBanner(doc, logoBase64, pageNum, totalPages) {
   // Gradient: deep crimson on the left → pure white on the right
   gradientRect(doc, 0, 0, PAGE_W, BANNER, C.redDark, C.white);
 
-  // Text on the left (over red area) — white for contrast
-  const textX = MX;
-  rgb(doc, C.white);
-  bold(doc, 11.5);
-  doc.text('UNIC Accommodation Office', textX, BANNER / 2 - 1);
-  norm(doc, 7.5);
-  doc.text('University of Nicosia Off Campus Accommodation Options', textX, BANNER / 2 + 5);
-
   // Logo on the right (over white area) — placed directly, no backing box
   const LOGO_W  = 52;
   const LOGO_H  = 15;
@@ -153,7 +145,7 @@ function addMeta(doc, total, filters) {
 
   rgb(doc, C.dark);
   bold(doc, 17);
-  doc.text('Accommodation Listings', MX, y);
+  doc.text('Off-campus Accommodation Listings', MX, y);
   y += 6.5;
 
   const dateStr = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });

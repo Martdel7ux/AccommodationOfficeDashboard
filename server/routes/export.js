@@ -278,7 +278,7 @@ router.post('/email', async (req, res) => {
     await transporter.sendMail({
       from:    process.env.EMAIL_FROM || 'UNIC Accommodation Office',
       to,
-      subject: subject || 'UNIC Accommodation Listings',
+      subject: subject || 'Off-campus Accommodation Listings',
       html: `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;font-family:-apple-system,sans-serif;background:#F8FAFC;">
   <div style="max-width:700px;margin:30px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);">
