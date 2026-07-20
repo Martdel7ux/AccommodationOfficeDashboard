@@ -2,8 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   Users, Plus, Search, X, Trash2, Phone, Mail, BookOpen,
   Home, UserSearch, Loader2, AlertCircle, ChevronDown,
+  FileDown, FileSpreadsheet,
 } from 'lucide-react';
 import { getFlatmates, createFlatmate, deleteFlatmate } from '../utils/api.js';
+import { generateFlatmatesPdf } from '../utils/exportFlatmatesPdf.js';
+import { generateFlatmatesExcel } from '../utils/exportFlatmatesExcel.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import Modal from '../components/common/Modal.jsx';
@@ -294,6 +297,149 @@ function AddStudentModal({ isOpen, onClose, onCreated }) {
   );
 }
 
+// ── Export Modal ──────────────────────────────────────────────────────────────
+const EXPORT_TYPES = [
+  { value: 'all',      icon: Users,      labelKey: 'exportTypeAll'   },
+  { value: 'has_flat', icon: Home,       labelKey: 'hasAFlat'        },
+  { value: 'looking',  icon: UserSearch, labelKey: 'lookingFlat'     },
+];
+
+// Translate the modal's selection into the query params the API expects
+function selectionParams({ type, gender }) {
+  const params = {};
+  if (type === 'has_flat') params.has_flat = 'true';
+  if (type === 'looking')  params.has_flat = 'false';
+  if (gender !== 'all')    params.gender   = gender;
+  return params;
+}
+
+function ExportModal({ isOpen, onClose }) {
+  const { t } = useLanguage();
+  const [type, setType]       = useState('all');
+  const [gender, setGender]   = useState('all');
+  const [matches, setMatches] = useState(null);   // null = still counting
+  const [busy, setBusy]       = useState('');     // '' | 'pdf' | 'excel'
+  const [error, setError]     = useState('');
+
+  const selection = { type, gender };
+
+  // Preview how many students the current selection covers
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    setMatches(null); setError('');
+    getFlatmates(selectionParams({ type, gender }))
+      .then((rows) => { if (!cancelled) setMatches(rows.length); })
+      .catch(() => { if (!cancelled) { setMatches(0); setError('Could not load matching students.'); } });
+    return () => { cancelled = true; };
+  }, [isOpen, type, gender]);
+
+  const runExport = async (format) => {
+    setBusy(format); setError('');
+    try {
+      const rows = await getFlatmates(selectionParams(selection));
+      if (format === 'pdf') await generateFlatmatesPdf(rows, selection);
+      else                  generateFlatmatesExcel(rows, selection);
+      onClose();
+    } catch {
+      setError('Export failed. Please try again.');
+    } finally {
+      setBusy('');
+    }
+  };
+
+  const handleClose = () => { setError(''); onClose(); };
+
+  return (
+    <Modal isOpen={isOpen} onClose={handleClose} title={t('flatmates.exportTitle')} size="md">
+      <div className="space-y-4">
+
+        {/* Type selector */}
+        <div>
+          <label className="form-label">{t('flatmates.exportType')}</label>
+          <div className="grid grid-cols-3 gap-2">
+            {EXPORT_TYPES.map(({ value, icon: Icon, labelKey }) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setType(value)}
+                className="flex flex-col items-start gap-1.5 p-3 rounded-xl border text-left transition-all"
+                style={type === value
+                  ? { background: 'rgba(196,18,48,0.06)', borderColor: 'rgba(196,18,48,0.35)', boxShadow: '0 0 0 1px rgba(196,18,48,0.18)' }
+                  : { background: 'rgba(255,255,255,0.6)', borderColor: 'rgba(203,213,225,0.5)' }
+                }
+              >
+                <Icon size={15} style={{ color: type === value ? '#C41230' : '#94a3b8' }} />
+                <p className="text-xs font-semibold text-slate-700 leading-tight">{t(`flatmates.${labelKey}`)}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Gender selector */}
+        <div>
+          <label className="form-label">{t('flatmates.exportGender')}</label>
+          <div className="relative">
+            <select
+              className="form-input appearance-none pr-8"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+            >
+              <option value="all">{t('flatmates.allGenders')}</option>
+              <option value="male">{t('flatmates.male')}</option>
+              <option value="female">{t('flatmates.female')}</option>
+              <option value="prefer_not_to_say">{t('flatmates.preferNot')}</option>
+            </select>
+            <ChevronDown size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+          </div>
+        </div>
+
+        {/* Match count */}
+        <div
+          className="flex items-center gap-2 text-xs rounded-lg px-3 py-2.5"
+          style={{ background: 'rgba(148,163,184,0.10)', color: '#475569' }}
+        >
+          <Users size={13} className="text-slate-400 flex-shrink-0" />
+          {matches === null
+            ? t('flatmates.counting')
+            : <span><span className="font-semibold">{matches}</span>{' '}
+                {matches === 1 ? t('flatmates.matching') : t('flatmates.matchingMany')}</span>}
+        </div>
+
+        {error && (
+          <div className="flex items-start gap-2 text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">
+            <AlertCircle size={13} className="mt-0.5 flex-shrink-0" /> {error}
+          </div>
+        )}
+
+        <div className="flex gap-2 pt-1">
+          <button onClick={handleClose} className="btn-secondary flex-1">{t('flatmates.cancel')}</button>
+          <button
+            onClick={() => runExport('excel')}
+            disabled={!!busy || !matches}
+            className="btn-secondary flex-1"
+          >
+            {busy === 'excel'
+              ? <Loader2 size={14} className="animate-spin" />
+              : <FileSpreadsheet size={14} style={{ color: '#059669' }} />}
+            {t('flatmates.exportExcel')}
+          </button>
+          <button
+            onClick={() => runExport('pdf')}
+            disabled={!!busy || !matches}
+            className="btn-primary flex-1"
+          >
+            {busy === 'pdf'
+              ? <Loader2 size={14} className="animate-spin" />
+              : <FileDown size={14} />}
+            {t('flatmates.exportPdf')}
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function Flatmates() {
   const { t } = useLanguage();
@@ -303,7 +449,8 @@ export default function Flatmates() {
   const [search, setSearch]       = useState('');
   const [gender, setGender]       = useState('all');
   const [year, setYear]           = useState('all');
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen]   = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
 
   const fetchStudents = useCallback(async () => {
     setLoading(true);
@@ -347,6 +494,7 @@ export default function Flatmates() {
   return (
     <div className="animate-fade-in">
       <AddStudentModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onCreated={handleCreated} />
+      <ExportModal isOpen={exportOpen} onClose={() => setExportOpen(false)} />
 
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
@@ -357,9 +505,17 @@ export default function Flatmates() {
           </h1>
           <p className="page-subtitle">{t('flatmates.subtitle')}</p>
         </div>
-        <button onClick={() => setModalOpen(true)} className="btn-primary">
-          <Plus size={15} /> {t('flatmates.addStudent')}
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setExportOpen(true)} className="btn-secondary">
+            <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg,#ffe4e6,#fecdd3)' }}>
+              <FileDown size={11} style={{ color: '#C41230' }} />
+            </span>
+            {t('flatmates.exportBtn')}
+          </button>
+          <button onClick={() => setModalOpen(true)} className="btn-primary">
+            <Plus size={15} /> {t('flatmates.addStudent')}
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
