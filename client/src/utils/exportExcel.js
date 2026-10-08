@@ -1,10 +1,10 @@
 import * as XLSX from 'xlsx';
 
-const AUDIENCE_MAP   = { 'full-time': 'Full-time Students', erasmus: 'Erasmus Students', both: 'All Students' };
+const AUDIENCE_MAP   = { 'full-time': 'Full-time Students', erasmus: 'Erasmus Students', both: 'All Students', staff: 'Staff Only' };
 const FURNISH_MAP    = { 'fully-furnished': 'Fully Furnished', 'semi-furnished': 'Semi-Furnished' };
 const TYPE_MAP       = { apartment: 'Apartment', studio: 'Studio', house: 'House', room: 'Room' };
 
-export function generateListingsExcel(listings) {
+export function generateListingsExcel(listings, filePrefix = 'UNIC-Accommodations') {
   // ── Build rows ──────────────────────────────────────────────────────────────
   const rows = listings.map((l) => ({
     'Property Type':      TYPE_MAP[l.property_type]    || l.property_type    || '',
@@ -85,6 +85,6 @@ export function generateListingsExcel(listings) {
   XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
 
   // ── Save ─────────────────────────────────────────────────────────────────────
-  const filename = `UNIC-Accommodations-${new Date().toISOString().slice(0, 10)}.xlsx`;
+  const filename = `${filePrefix}-${new Date().toISOString().slice(0, 10)}.xlsx`;
   XLSX.writeFile(wb, filename);
 }

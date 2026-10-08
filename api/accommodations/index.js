@@ -24,6 +24,12 @@ function buildQuery(q) {
   if (q.target_audience && q.target_audience !== 'all')
     query = query.or(`target_audience.eq.${q.target_audience},target_audience.eq.both`);
 
+  // Staff-only housing is kept apart from the student listings
+  if (q.scope === 'staff')
+    query = query.eq('target_audience', 'staff');
+  else if (q.scope === 'students')
+    query = query.neq('target_audience', 'staff');
+
   if (q.walking_distance === 'true')
     query = query.eq('walking_distance', true);
 

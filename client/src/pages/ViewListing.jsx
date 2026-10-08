@@ -39,7 +39,7 @@ export default function ViewListing() {
   const handleDelete = async () => {
     if (!window.confirm('Delete this listing permanently?')) return;
     await deleteAccommodation(id);
-    navigate('/listings');
+    navigate(listing?.target_audience === 'staff' ? '/staff-housing' : '/listings');
   };
 
   if (fetchError) {
@@ -58,8 +58,9 @@ export default function ViewListing() {
   const l       = listing;
   const images  = l.images || [];
   const hasImgs = images.length > 0;
+  const isStaff = l.target_audience === 'staff';
 
-  const AUDIENCE_MAP   = { 'full-time': 'Full-time Students', erasmus: 'Erasmus Students', both: 'All Students' };
+  const AUDIENCE_MAP   = { 'full-time': 'Full-time Students', erasmus: 'Erasmus Students', both: 'All Students', staff: 'Staff Only' };
   const FURNISH_MAP    = { 'fully-furnished': 'Fully Furnished', 'semi-furnished': 'Semi-Furnished' };
   const TYPE_MAP       = { apartment: 'Apartment', studio: 'Studio', house: 'House', room: 'Room' };
 
@@ -68,11 +69,11 @@ export default function ViewListing() {
       {/* Back + actions */}
       <div className="flex items-center justify-between mb-5">
         <button
-          onClick={() => navigate('/listings')}
+          onClick={() => navigate(isStaff ? '/staff-housing' : '/listings')}
           className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 transition-colors"
         >
           <ArrowLeft size={15} />
-          All Listings
+          {isStaff ? 'Staff Housing' : 'All Listings'}
         </button>
         <div className="flex gap-2">
           <button onClick={() => navigate(`/listings/${id}/edit`)} className="btn-secondary">

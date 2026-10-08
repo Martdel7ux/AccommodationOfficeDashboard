@@ -10,6 +10,7 @@ const TYPE_KEYS = {
 };
 const AUDIENCE_KEYS = {
   'full-time': 'property.fullTime', erasmus: 'property.erasmus', both: 'property.allStudents',
+  staff: 'property.staffOnly',
 };
 
 // ── Premium glass tooltip ─────────────────────────────────────────────────────
@@ -310,7 +311,7 @@ export function BedroomsChart({ data = [] }) {
 }
 
 // ── 4. Target Audience ────────────────────────────────────────────────────────
-const AUDIENCE_COLORS = ['#C41230', '#3B82F6', '#F59E0B'];
+const AUDIENCE_COLORS = ['#C41230', '#3B82F6', '#F59E0B', '#10B981'];
 
 export function AudienceChart({ data = [] }) {
   const { t } = useLanguage();

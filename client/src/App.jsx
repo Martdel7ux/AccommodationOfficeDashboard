@@ -39,7 +39,8 @@ export default function App() {
             <Route element={<ProtectedLayout />}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard"         element={<Dashboard />} />
-              <Route path="/listings"          element={<Listings />} />
+              <Route path="/listings"          element={<Listings key="students" scope="students" />} />
+              <Route path="/staff-housing"     element={<Listings key="staff" scope="staff" />} />
               <Route path="/listings/new"      element={<AddListing />} />
               <Route path="/listings/:id/edit" element={<EditListing />} />
               <Route path="/listings/:id"      element={<ViewListing />} />

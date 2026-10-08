@@ -141,7 +141,7 @@ function drawCard(doc, l, imgBase64, y) {
   ty += 5.5;
 
   // Tags
-  const AUDIENCE_MAP = { 'full-time': 'Full-time', erasmus: 'Erasmus', both: 'All Students' };
+  const AUDIENCE_MAP = { 'full-time': 'Full-time', erasmus: 'Erasmus', both: 'All Students', staff: 'Staff Only' };
   const tags = [];
   if (l.furnishing_status) tags.push(l.furnishing_status === 'fully-furnished' ? 'Fully Furnished' : 'Semi-Furnished');
   if (l.walking_distance)  tags.push('Walking Distance');
@@ -182,7 +182,7 @@ function addDisclaimerPage(doc, logoBase64, pageNum, totalPages) {
 }
 
 // ── Main export ───────────────────────────────────────────────────────────────
-export async function generateListingsPdf(listings, activeFilters = {}) {
+export async function generateListingsPdf(listings, activeFilters = {}, filePrefix = 'UNIC-Accommodations') {
   // Fetch logo and all property images in parallel
   const [logoBase64, ...imgData] = await Promise.all([
     loadLogoBase64('/unic-logo.png'),
@@ -220,7 +220,7 @@ export async function generateListingsPdf(listings, activeFilters = {}) {
   // Disclaimer page
   addDisclaimerPage(doc, logoBase64, totalPages, totalPages);
 
-  const filename = `UNIC-Accommodations-${new Date().toISOString().slice(0, 10)}.pdf`;
+  const filename = `${filePrefix}-${new Date().toISOString().slice(0, 10)}.pdf`;
   await savePdf(doc, filename);
 }
 

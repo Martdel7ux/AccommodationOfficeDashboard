@@ -39,6 +39,7 @@ const AUDIENCE_CONFIG = {
   'full-time': { label: 'Full-time',    cls: 'badge-blue' },
   'erasmus':   { label: 'Erasmus',      cls: 'badge-purple' },
   'both':      { label: 'All Students', cls: 'badge-green' },
+  'staff':     { label: 'Staff Only',   cls: 'badge-amber' },
 };
 
 export function AudienceBadge({ audience }) {

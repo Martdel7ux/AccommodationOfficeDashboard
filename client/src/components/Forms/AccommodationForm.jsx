@@ -24,10 +24,11 @@ const BEDROOMS = [1, 2, 3, 4];
 const AUDIENCES = [
   { value: 'full-time', label: 'Full-time Students', desc: 'For regular degree students' },
   { value: 'erasmus',   label: 'Erasmus Students',   desc: 'For exchange programme students' },
-  { value: 'both',      label: 'All Students',        desc: 'Open to everyone' },
+  { value: 'both',      label: 'All Students',        desc: 'Open to every student' },
+  { value: 'staff',     label: 'Staff Only',          desc: 'For university staff — kept out of the student listings' },
 ];
 
-export default function AccommodationForm({ initialData, onSubmit, isLoading }) {
+export default function AccommodationForm({ initialData, onSubmit, isLoading, defaultAudience = 'both' }) {
   const [step, setStep]                   = useState(1);
   const [newFiles, setNewFiles]           = useState([]);
   const [deletedImages, setDeletedImages] = useState([]);
@@ -53,7 +54,7 @@ export default function AccommodationForm({ initialData, onSubmit, isLoading }) 
       address:             initialData?.address             || '',
       availability_date:   initialData?.availability_date   || '',
       availability_status: initialData?.availability_status || 'available',
-      target_audience:     initialData?.target_audience     || 'both',
+      target_audience:     initialData?.target_audience     || defaultAudience,
       furnishing_status:   initialData?.furnishing_status   || 'fully-furnished',
       walking_distance:    initialData?.walking_distance     ? 'true' : 'false',
       description:         initialData?.description         || '',

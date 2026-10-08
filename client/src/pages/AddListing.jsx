@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, MapPin, Home } from 'lucide-react';
 import { createAccommodation, getAccommodations } from '../utils/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -31,6 +31,8 @@ async function findDuplicates(formData) {
 export default function AddListing() {
   const navigate = useNavigate();
   const { user }  = useAuth();
+  const [searchParams] = useSearchParams();
+  const isStaff = searchParams.get('audience') === 'staff';
 
   const [isLoading, setIsLoading]   = useState(false);
   const [duplicates, setDuplicates] = useState(null);   // array when modal open, null when closed
@@ -151,17 +153,17 @@ export default function AddListing() {
       {/* ── Page header ─────────────────────────────────────────────────────── */}
       <div className="mb-6">
         <button
-          onClick={() => navigate('/listings')}
+          onClick={() => navigate(isStaff ? '/staff-housing' : '/listings')}
           className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-4"
         >
           <ArrowLeft size={15} />
-          Back to Listings
+          {isStaff ? 'Back to Staff Housing' : 'Back to Listings'}
         </button>
-        <h1 className="page-title">Add New Listing</h1>
+        <h1 className="page-title">{isStaff ? 'Add Staff Housing Listing' : 'Add New Listing'}</h1>
         <p className="page-subtitle">Fill in the details to add a new accommodation to the database</p>
       </div>
 
-      <AccommodationForm onSubmit={handleSubmit} isLoading={isLoading} />
+      <AccommodationForm onSubmit={handleSubmit} isLoading={isLoading} defaultAudience={isStaff ? 'staff' : 'both'} />
     </div>
   );
 }

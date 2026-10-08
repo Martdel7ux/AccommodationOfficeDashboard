@@ -10,6 +10,8 @@ function getFiltered(all, filters = {}) {
     if (filters.bedrooms     && Number(a.bedrooms) !== Number(filters.bedrooms))                              return false;
     if (filters.min_price    && Number(a.price) < Number(filters.min_price))                                  return false;
     if (filters.max_price    && Number(a.price) > Number(filters.max_price))                                  return false;
+    if (filters.scope === 'staff'    && a.target_audience !== 'staff') return false;
+    if (filters.scope === 'students' && a.target_audience === 'staff') return false;
     if (filters.target_audience && filters.target_audience !== 'all') {
       if (a.target_audience !== filters.target_audience && a.target_audience !== 'both') return false;
     }

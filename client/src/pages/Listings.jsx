@@ -17,8 +17,8 @@ const DEFAULT_FILTERS = {
   walking_distance: false, availability_from: '', availability_to: '',
 };
 
-function buildApiParams(f) {
-  const p = {};
+function buildApiParams(f, scope) {
+  const p = { scope };
   if (f.search)              p.search           = f.search;
   if (f.phone)               p.phone            = f.phone;
   if (f.status !== 'all')    p.status           = f.status;
@@ -85,7 +85,8 @@ function ListingRow({ listing: l, onDelete }) {
 }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
-export default function Listings() {
+export default function Listings({ scope = 'students' }) {
+  const isStaff = scope === 'staff';
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [listings, setListings]   = useState([]);
@@ -98,17 +99,19 @@ export default function Listings() {
 
   const fetchListings = useCallback((f) => {
     setLoading(true);
-    getAccommodations(buildApiParams(f))
+    getAccommodations(buildApiParams(f, scope))
       .then(setListings)
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, []);
+  }, [scope]);
 
   useEffect(() => {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => fetchListings(filters), 300);
     return () => clearTimeout(debounceRef.current);
   }, [filters, fetchListings]);
+
+  const filePrefix = isStaff ? 'UNIC-Staff-Accommodations' : 'UNIC-Accommodations';
 
   const handleDelete = async (id) => {
     await deleteAccommodation(id);
@@ -117,12 +120,12 @@ export default function Listings() {
 
   const handleExportPdf = async () => {
     setExporting(true);
-    await generateListingsPdf(listings, filters).catch(console.error);
+    await generateListingsPdf(listings, filters, filePrefix).catch(console.error);
     setExporting(false);
   };
 
   const handleExportExcel = () => {
-    generateListingsExcel(listings);
+    generateListingsExcel(listings, filePrefix);
   };
 
   return (
@@ -130,7 +133,7 @@ export default function Listings() {
       {/* Page header */}
       <div className="page-header mb-4">
         <div>
-          <h1 className="page-title">{t('listings.title')}</h1>
+          <h1 className="page-title">{t(isStaff ? 'listings.staffTitle' : 'listings.title')}</h1>
           <p className="page-subtitle">
             {loading ? t('listings.loading') : `${listings.length} ${listings.length !== 1 ? t('listings.foundMany') : t('listings.found1')}`}
           </p>
@@ -154,7 +157,7 @@ export default function Listings() {
             </span>
             {t('listings.email')}
           </button>
-          <button onClick={() => navigate('/listings/new')} className="btn-primary">
+          <button onClick={() => navigate(isStaff ? '/listings/new?audience=staff' : '/listings/new')} className="btn-primary">
             <Plus size={15} />
             {t('listings.addListing')}
           </button>
@@ -164,7 +167,7 @@ export default function Listings() {
       <div className="flex gap-6 items-start">
         {/* Filter sidebar */}
         <div className="w-60 flex-shrink-0">
-          <FilterPanel filters={filters} onChange={setFilters} />
+          <FilterPanel filters={filters} onChange={setFilters} hideAudience={isStaff} />
         </div>
 
         {/* Results */}
@@ -225,7 +228,7 @@ export default function Listings() {
       <EmailModal
         isOpen={emailOpen}
         onClose={() => setEmailOpen(false)}
-        filters={buildApiParams(filters)}
+        filters={buildApiParams(filters, scope)}
         count={listings.length}
       />
     </div>

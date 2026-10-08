@@ -13,7 +13,7 @@ const DEFAULT_FILTERS = {
 const BTN_ACTIVE   = 'bg-primary-600 text-white border-primary-600 shadow-sm';
 const BTN_INACTIVE = 'bg-white text-slate-600 border-slate-200 hover:border-primary-300';
 
-export default function FilterPanel({ filters, onChange }) {
+export default function FilterPanel({ filters, onChange, hideAudience = false }) {
   const { t } = useLanguage();
   const set = (key, val) => onChange({ ...filters, [key]: val });
 
@@ -168,17 +168,19 @@ export default function FilterPanel({ filters, onChange }) {
       </div>
 
       {/* Target audience */}
-      <div>
-        <label className="form-label">{t('filters.audience')}</label>
-        <div className="flex gap-1.5">
-          {AUDIENCES.map(({ value, label }) => (
-            <button key={value} onClick={() => set('target_audience', value)}
-              className={`flex-1 py-1.5 px-1.5 rounded-lg text-xs font-medium border transition-all ${filters.target_audience === value ? BTN_ACTIVE : BTN_INACTIVE}`}>
-              {label}
-            </button>
-          ))}
+      {!hideAudience && (
+        <div>
+          <label className="form-label">{t('filters.audience')}</label>
+          <div className="flex gap-1.5">
+            {AUDIENCES.map(({ value, label }) => (
+              <button key={value} onClick={() => set('target_audience', value)}
+                className={`flex-1 py-1.5 px-1.5 rounded-lg text-xs font-medium border transition-all ${filters.target_audience === value ? BTN_ACTIVE : BTN_INACTIVE}`}>
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Walking distance */}
       <div className="flex items-center justify-between">

@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Home, PlusCircle, LogOut, ChevronRight, Download, Users } from 'lucide-react';
+import { LayoutDashboard, Home, PlusCircle, LogOut, ChevronRight, Download, Users, Briefcase } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useLanguage } from '../../context/LanguageContext.jsx';
 import { useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: '/dashboard',    key: 'nav.dashboard',   icon: LayoutDashboard },
   { to: '/listings',     key: 'nav.allListings',  icon: Home },
   { to: '/listings/new', key: 'nav.addListing',   icon: PlusCircle },
+  { to: '/staff-housing', key: 'nav.staffHousing', icon: Briefcase },
   { to: '/flatmates',    key: 'nav.flatMate',     icon: Users },
 ];
 
