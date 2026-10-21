@@ -58,6 +58,7 @@ export default function AccommodationForm({ initialData, onSubmit, isLoading, de
       furnishing_status:   initialData?.furnishing_status   || 'fully-furnished',
       walking_distance:    initialData?.walking_distance     ? 'true' : 'false',
       description:         initialData?.description         || '',
+      link:                initialData?.link                || '',
     },
   });
 
@@ -65,12 +66,13 @@ export default function AccommodationForm({ initialData, onSubmit, isLoading, de
   const watchedBedrooms = watch('bedrooms');
   const watchedStatus   = watch('availability_status');
   const watchedAudience = watch('target_audience');
+  const isStaff         = watchedAudience === 'staff';
   const watchedFurnish  = watch('furnishing_status');
   const watchedWalk     = watch('walking_distance');
 
   const STEP_FIELDS = {
     1: ['first_name', 'last_name', 'phone'],
-    2: ['property_type', 'price', 'address', 'availability_status'],
+    2: ['property_type', 'price', 'address', 'link', 'availability_status'],
   };
 
   const goNext = async () => {
@@ -80,8 +82,11 @@ export default function AccommodationForm({ initialData, onSubmit, isLoading, de
 
   const handleFormSubmit = async (data) => {
     setServerError('');
+    // Store links with a protocol so they open as external sites
+    const link = data.target_audience === 'staff' ? data.link.trim() : '';
     const body = {
       ...data,
+      link: link && !/^https?:\/\//i.test(link) ? `https://${link}` : link,
       image_urls:      newFiles,        // [{ storage_path, public_url, original_name }]
       delete_image_ids: deletedImages,  // [id, id, ...]
     };
@@ -157,14 +162,15 @@ export default function AccommodationForm({ initialData, onSubmit, isLoading, de
             </div>
 
             <div>
-              <label className="form-label">Phone Number *</label>
+              <label className="form-label">Phone Number{isStaff ? '' : ' *'}</label>
               <input
                 {...register('phone', {
-                  required: 'Required',
+                  validate: (v, values) =>
+                    values.target_audience === 'staff' || !!v.trim() || 'Required',
                   pattern: { value: /^[+\d\s().-]{7,20}$/, message: 'Invalid phone number' },
                 })}
                 className={`form-input ${errors.phone ? 'error' : ''}`}
-                placeholder="+357 99 123456"
+                placeholder={isStaff ? '+357 99 123456 (optional)' : '+357 99 123456'}
                 type="tel"
               />
               {errors.phone && <p className="form-error">{errors.phone.message}</p>}
@@ -278,6 +284,23 @@ export default function AccommodationForm({ initialData, onSubmit, isLoading, de
               />
               {errors.address && <p className="form-error">{errors.address.message}</p>}
             </div>
+
+            {/* Website link (staff housing only) */}
+            {isStaff && (
+              <div>
+                <label className="form-label">Link</label>
+                <input
+                  {...register('link', {
+                    pattern: { value: /^(https?:\/\/)?[^\s.]+\.[^\s]{2,}$/i, message: 'Invalid link' },
+                  })}
+                  className={`form-input ${errors.link ? 'error' : ''}`}
+                  placeholder="https://www.example.com (optional)"
+                  type="text"
+                  inputMode="url"
+                />
+                {errors.link && <p className="form-error">{errors.link.message}</p>}
+              </div>
+            )}
 
             {/* Availability */}
             <div className="grid grid-cols-2 gap-4">

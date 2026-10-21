@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS accommodations (
   id                  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   first_name          TEXT NOT NULL,
   last_name           TEXT NOT NULL,
-  phone               TEXT NOT NULL,
+  phone               TEXT,                -- optional for staff housing
   email               TEXT,
   property_type       TEXT NOT NULL DEFAULT 'apartment',
   bedrooms            INTEGER,
@@ -20,11 +20,16 @@ CREATE TABLE IF NOT EXISTS accommodations (
   furnishing_status   TEXT,
   walking_distance    BOOLEAN NOT NULL DEFAULT false,
   description         TEXT,
+  link                TEXT,                -- website link (staff housing)
   created_by_id       UUID,
   created_by_name     TEXT,
   created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Upgrade for databases created before staff housing links existed
+ALTER TABLE accommodations ADD COLUMN IF NOT EXISTS link TEXT;
+ALTER TABLE accommodations ALTER COLUMN phone DROP NOT NULL;
 
 -- 2. Images table (foreign key cascades on delete)
 CREATE TABLE IF NOT EXISTS accommodation_images (

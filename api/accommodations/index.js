@@ -86,7 +86,7 @@ module.exports = async (req, res) => {
         first_name, last_name, phone, email,
         property_type, bedrooms, price, address,
         availability_date, availability_status, target_audience,
-        furnishing_status, walking_distance, description,
+        furnishing_status, walking_distance, description, link,
         image_urls = [],
         created_by_id   = null,
         created_by_name = null,
@@ -95,7 +95,8 @@ module.exports = async (req, res) => {
       const { data: acc, error } = await supabase
         .from('accommodations')
         .insert([{
-          first_name, last_name, phone, email,
+          first_name, last_name, email,
+          phone:               phone               || null,
           property_type,
           bedrooms: bedrooms ? Number(bedrooms) : null,
           price: Number(price),
@@ -106,6 +107,8 @@ module.exports = async (req, res) => {
           furnishing_status:   furnishing_status   || null,
           walking_distance:    walking_distance === true || walking_distance === 'true',
           description:         description         || null,
+          // Website link is only used by staff housing listings
+          ...(target_audience === 'staff' ? { link: link || null } : {}),
           created_by_id:       created_by_id       || null,
           created_by_name:     created_by_name     || null,
         }])

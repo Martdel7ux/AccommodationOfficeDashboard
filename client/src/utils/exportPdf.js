@@ -133,10 +133,11 @@ function drawCard(doc, l, imgBase64, y) {
   doc.text(nameStr, TEXT_X, ty);
   const nameW = doc.getTextWidth(nameStr);
   norm(doc, 8); rgb(doc, C.mid);
-  doc.text(`  ·  ${l.phone}`, TEXT_X + nameW, ty);
-  if (l.email) {
+  if (l.phone) doc.text(`  ·  ${l.phone}`, TEXT_X + nameW, ty);
+  const contact = [l.email, l.target_audience === 'staff' ? l.link : null].filter(Boolean).join('  ·  ');
+  if (contact) {
     ty += 4;
-    doc.text(l.email, TEXT_X, ty);
+    doc.text(doc.splitTextToSize(contact, TEXT_W)[0], TEXT_X, ty);
   }
   ty += 5.5;
 

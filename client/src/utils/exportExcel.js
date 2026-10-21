@@ -22,6 +22,7 @@ export function generateListingsExcel(listings, filePrefix = 'UNIC-Accommodation
     'Landlord Last Name':  l.last_name   || '',
     'Phone':               l.phone       || '',
     'Email':               l.email       || '',
+    'Link':                l.link        || '',
     'Description':         l.description || '',
     'Added By':            l.created_by_name || '',
     'Date Added':          l.created_at
@@ -54,6 +55,7 @@ export function generateListingsExcel(listings, filePrefix = 'UNIC-Accommodation
     { wch: 20 }, // Last Name
     { wch: 18 }, // Phone
     { wch: 26 }, // Email
+    { wch: 34 }, // Link
     { wch: 40 }, // Description
     { wch: 20 }, // Added By
     { wch: 16 }, // Date Added

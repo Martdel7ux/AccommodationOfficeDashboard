@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft, Pencil, Trash2, MapPin, Phone, Mail, Bed, Euro,
-  Footprints, Calendar, Users, Sofa, ChevronLeft, ChevronRight, ImageIcon,
+  Footprints, Calendar, Users, Sofa, ChevronLeft, ChevronRight, ImageIcon, Globe,
 } from 'lucide-react';
 import { getAccommodation, deleteAccommodation } from '../utils/api.js';
 import { StatusBadge, PropertyTypeBadge, AudienceBadge } from '../components/common/Badge.jsx';
@@ -220,20 +220,35 @@ export default function ViewListing() {
                 <p className="text-xs text-slate-400">Property Owner</p>
               </div>
             </div>
-            <a
-              href={`tel:${l.phone}`}
-              className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors group"
-            >
-              <Phone size={14} className="text-slate-400 group-hover:text-primary-600 transition-colors" />
-              <span className="text-sm text-slate-700">{l.phone}</span>
-            </a>
-            <a
-              href={`mailto:${l.email}`}
-              className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors group"
-            >
-              <Mail size={14} className="text-slate-400 group-hover:text-primary-600 transition-colors" />
-              <span className="text-sm text-slate-700 truncate">{l.email}</span>
-            </a>
+            {l.phone && (
+              <a
+                href={`tel:${l.phone}`}
+                className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors group"
+              >
+                <Phone size={14} className="text-slate-400 group-hover:text-primary-600 transition-colors" />
+                <span className="text-sm text-slate-700">{l.phone}</span>
+              </a>
+            )}
+            {l.email && (
+              <a
+                href={`mailto:${l.email}`}
+                className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors group"
+              >
+                <Mail size={14} className="text-slate-400 group-hover:text-primary-600 transition-colors" />
+                <span className="text-sm text-slate-700 truncate">{l.email}</span>
+              </a>
+            )}
+            {isStaff && l.link && (
+              <a
+                href={l.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-colors group"
+              >
+                <Globe size={14} className="text-slate-400 group-hover:text-primary-600 transition-colors" />
+                <span className="text-sm text-primary-600 truncate">{l.link.replace(/^https?:\/\//i, '')}</span>
+              </a>
+            )}
           </div>
 
           {/* Metadata */}
